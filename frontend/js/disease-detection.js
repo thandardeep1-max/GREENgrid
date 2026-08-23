@@ -876,3 +876,32 @@ document.getElementById("downloadReport").addEventListener("click", function () 
 
     URL.revokeObjectURL(url);
 });
+
+console.log("Disease detection JS loaded");
+
+const downloadButton = document.getElementById("downloadReport");
+
+console.log("Download button:", downloadButton);
+
+if (downloadButton) {
+    downloadButton.addEventListener("click", function () {
+        console.log("DOWNLOAD BUTTON CLICKED");
+
+        const testFile = new Blob(
+            ["GREENgrid Disease Detection Report"],
+            { type: "text/plain" }
+        );
+
+        const url = URL.createObjectURL(testFile);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "GREENgrid_Test_Report.txt";
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        URL.revokeObjectURL(url);
+    });
+}
