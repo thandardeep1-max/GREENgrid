@@ -1,7 +1,7 @@
 # FastAPI Framework
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-python-multipart==0.0.6
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+python-multipart==0.0.20
 
 # Arduino Serial Communication
 pyserial==3.5
@@ -16,7 +16,7 @@ httpx==0.26.0
 
 # Environment Variables
 python-dotenv==1.0.0
-pydantic==2.5.3
+pydantic==2.11.7
 pydantic-settings==2.1.0
 
 # CORS
@@ -24,7 +24,8 @@ fastapi-cors==0.0.6
 
 # Machine Learning
 numpy==1.26.3
-pillow==10.2.0
+pillow==10.4.0
+tensorflow==2.15.1
 
 # Database (Optional - for production)
 # sqlalchemy==2.0.25
