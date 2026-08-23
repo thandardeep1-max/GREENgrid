@@ -136,40 +136,138 @@
 
         <!-- Page Content -->
         <div class="page-content">
-            <!-- Upload Section -->
-            <div class="disease-upload-section" id="uploadSection">
-                <div class="upload-zone" id="uploadZone">
-                    <div class="upload-icon">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
+            <!-- Sensor Connection Section -->
+            <div class="soil-sensor-section" id="sensorSection">
+                <div class="sensor-card">
+                    <div class="sensor-icon">
+                        <i class="fa-solid fa-microchip"></i>
                     </div>
-                    <h3 class="upload-title" data-lang="upload_photo">Upload Plant Photo</h3>
-                    <p class="upload-desc" data-lang="upload_desc">Drag and drop an image here, or click to select</p>
-                    <div class="upload-actions">
-                        <label class="btn btn-primary btn-lg">
-                            <i class="fa-solid fa-image"></i>
-                            <span data-lang="choose_file">Choose File</span>
-                            <input type="file" id="fileInput" accept="image/*" hidden>
-                        </label>
-                        <button class="btn btn-outline btn-lg" id="cameraBtn">
-                            <i class="fa-solid fa-camera"></i>
-                            <span data-lang="take_photo">Take Photo</span>
+                    <h3 class="sensor-title" data-lang="sensor_connection">Sensor Connection</h3>
+                    <p class="sensor-desc" data-lang="sensor_desc">Connect your Arduino or IoT soil sensor</p>
+                    <div class="sensor-actions">
+                        <button class="btn btn-primary" id="connectBtn">
+                            <i class="fa-solid fa-plug"></i>
+                            <span data-lang="connect_sensor">Connect Sensor</span>
+                        </button>
+                        <button class="btn btn-outline" id="disconnectBtn" disabled>
+                            <i class="fa-solid fa-plug-circle-xmark"></i>
+                            <span data-lang="disconnect">Disconnect</span>
                         </button>
                     </div>
-                    <p class="upload-hint" data-lang="upload_hint">Supports: JPG, PNG, WEBP (Max 5MB)</p>
+                    <div class="sensor-status" id="sensorStatus">
+                        <span class="status-indicator offline"></span>
+                        <span data-lang="status_disconnected">Disconnected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensor Data Display Section -->
+            <div class="sensor-data-section hidden" id="dataSection">
+                <div class="sensor-readings">
+                    <!-- Moisture -->
+                    <div class="sensor-reading-card">
+                        <div class="reading-icon moisture">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <div class="reading-content">
+                            <h4 class="reading-label" data-lang="soil_moisture">Soil Moisture</h4>
+                            <div class="reading-value">
+                                <span id="moistureValue">0</span><span>%</span>
+                            </div>
+                            <div class="reading-status" id="moistureStatus">Normal</div>
+                        </div>
+                    </div>
+
+                    <!-- pH Level -->
+                    <div class="sensor-reading-card">
+                        <div class="reading-icon ph">
+                            <i class="fa-solid fa-flask-vial"></i>
+                        </div>
+                        <div class="reading-content">
+                            <h4 class="reading-label" data-lang="ph_level">pH Level</h4>
+                            <div class="reading-value">
+                                <span id="phValue">0</span>
+                            </div>
+                            <div class="reading-status" id="phStatus">Normal</div>
+                        </div>
+                    </div>
+
+                    <!-- Temperature -->
+                    <div class="sensor-reading-card">
+                        <div class="reading-icon temperature">
+                            <i class="fa-solid fa-thermometer"></i>
+                        </div>
+                        <div class="reading-content">
+                            <h4 class="reading-label" data-lang="temperature">Temperature</h4>
+                            <div class="reading-value">
+                                <span id="tempValue">0</span><span>°C</span>
+                            </div>
+                            <div class="reading-status" id="tempStatus">Normal</div>
+                        </div>
+                    </div>
+
+                    <!-- Conductivity -->
+                    <div class="sensor-reading-card">
+                        <div class="reading-icon conductivity">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div class="reading-content">
+                            <h4 class="reading-label" data-lang="conductivity">EC/Conductivity</h4>
+                            <div class="reading-value">
+                                <span id="conductivityValue">0</span><span>mS/cm</span>
+                            </div>
+                            <div class="reading-status" id="conductivityStatus">Normal</div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Image Preview -->
-                <div class="image-preview hidden" id="imagePreview">
-                    <img src="" alt="Uploaded plant image" id="previewImage">
-                    <div class="image-preview-actions">
-                        <button class="btn btn-outline" id="removeImage">
-                            <i class="fa-solid fa-trash"></i>
-                            <span data-lang="remove">Remove</span>
+                <!-- Controls Section -->
+                <div class="sensor-controls">
+                    <div class="control-group">
+                        <label class="control-label">
+                            <input type="checkbox" id="autoRefresh" checked>
+                            <span data-lang="auto_refresh">Auto Refresh</span>
+                        </label>
+                        <div class="refresh-interval">
+                            <label for="refreshRate">Interval (seconds):</label>
+                            <input type="number" id="refreshRate" min="5" max="60" value="10">
+                        </div>
+                    </div>
+
+                    <div class="control-actions">
+                        <button class="btn btn-primary" id="refreshBtn">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            <span data-lang="refresh_data">Refresh Data</span>
                         </button>
-                        <button class="btn btn-primary" id="analyzeBtn">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <span data-lang="analyze">Analyze Disease</span>
+                        <button class="btn btn-outline" id="downloadBtn">
+                            <i class="fa-solid fa-download"></i>
+                            <span data-lang="download_report">Download Report</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- Historical Data -->
+                <div class="historical-data">
+                    <h3 class="section-title">Readings History</h3>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th data-lang="timestamp">Timestamp</th>
+                                    <th data-lang="soil_moisture">Moisture (%)</th>
+                                    <th data-lang="ph_level">pH</th>
+                                    <th data-lang="temperature">Temp (°C)</th>
+                                    <th data-lang="conductivity">EC (mS/cm)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 20px;">
+                                        <span data-lang="no_data">No data yet</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -178,143 +276,14 @@
             <div class="processing-section hidden" id="processingSection">
                 <div class="processing-animation">
                     <div class="processing-spinner">
-                        <i class="fa-solid fa-microscope"></i>
+                        <i class="fa-solid fa-microchip"></i>
                     </div>
-                    <h3 class="processing-title" data-lang="analyzing_image">Analyzing Image...</h3>
-                    <p class="processing-desc" data-lang="processing_desc">Our AI is examining the plant for disease signs</p>
-                    <div class="progress-bar mt-lg">
-                        <div class="progress-bar-fill" id="progressBar" style="width: 0%;"></div>
-                    </div>
+                    <h3 class="processing-title" data-lang="connecting_sensor">Connecting to Sensor...</h3>
+                    <p class="processing-desc" data-lang="please_wait">Please wait while we establish connection</p>
                 </div>
-            </div>
-
-            <!-- Results Section -->
-            <div class="results-section hidden" id="resultsSection">
-                <div class="results-header">
-                    <h2 class="results-title" data-lang="detection_result">Detection Result</h2>
-                    <button class="btn btn-outline" id="newScanBtn">
-                        <i class="fa-solid fa-rotate"></i>
-                        <span data-lang="new_scan">New Scan</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Sensor Status -->
-            <div class="sensor-status connected" id="sensorStatus">
-                <div class="sensor-status-indicator"></div>
-                <div class="sensor-status-info">
-                    <div class="sensor-status-title" data-lang="sensor_connected">Arduino Sensor Connected</div>
-                    <div class="sensor-status-desc" data-lang="sensor_reading">Reading soil parameters...</div>
-                </div>
-                <div class="sensor-status-action">
-                    <button class="btn btn-outline btn-sm" id="refreshSensor">
-                        <i class="fa-solid fa-rotate"></i>
-                        <span data-lang="refresh">Refresh</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Soil Parameters Grid -->
-            <div class="soil-params-grid">
-                <!-- pH Level -->
-                <div class="soil-param-card ph">
-                    <div class="soil-param-icon">🧪</div>
-                    <div class="soil-param-value" id="phValue">6.5</div>
-                    <div class="soil-param-unit">pH</div>
-                    <div class="soil-param-label" data-lang="ph_level">pH Level</div>
-                    <div class="soil-param-status normal" id="phStatus" data-lang="normal">Normal</div>
-                </div>
-
-                <!-- Moisture -->
-                <div class="soil-param-card moisture">
-                    <div class="soil-param-icon">💧</div>
-                    <div class="soil-param-value" id="moistureValue">45</div>
-                    <div class="soil-param-unit">%</div>
-                    <div class="soil-param-label" data-lang="moisture">Moisture</div>
-                    <div class="soil-param-status normal" id="moistureStatus" data-lang="normal">Normal</div>
-                </div>
-
-                <!-- Temperature -->
-                <div class="soil-param-card temp">
-                    <div class="soil-param-icon">🌡️</div>
-                    <div class="soil-param-value" id="tempValue">28</div>
-                    <div class="soil-param-unit">°C</div>
-                    <div class="soil-param-label" data-lang="temperature">Temperature</div>
-                    <div class="soil-param-status normal" id="tempStatus" data-lang="normal">Normal</div>
-                </div>
-
-                <!-- NPK -->
-                <div class="soil-param-card npk">
-                    <div class="soil-param-icon">🌱</div>
-                    <div class="soil-param-value" id="npkValue">N:40</div>
-                    <div class="soil-param-unit">P:20 K:30</div>
-                    <div class="soil-param-label" data-lang="npk">NPK Level</div>
-                    <div class="soil-param-status normal" id="npkStatus" data-lang="normal">Normal</div>
-                </div>
-            </div>
-
-            <!-- Soil Health Report -->
-            <div class="soil-report">
-                <div class="soil-report-header">
-                    <h2 class="soil-report-title" data-lang="soil_health_report">📊 Soil Health Report</h2>
-                </div>
-                <div class="soil-report-body">
-                    <div class="soil-report-item">
-                        <span class="soil-report-item-label" data-lang="soil_type">Soil Type</span>
-                        <span class="soil-report-item-value" data-lang="loamy">Loamy Soil</span>
-                    </div>
-                    <div class="soil-report-item">
-                        <span class="soil-report-item-label" data-lang="fertility">Fertility Level</span>
-                        <span class="soil-report-item-value" data-lang="moderate">Moderate</span>
-                    </div>
-                    <div class="soil-report-item">
-                        <span class="soil-report-item-label" data-lang="drainage">Drainage</span>
-                        <span class="soil-report-item-value" data-lang="good">Good</span>
-                    </div>
-                    <div class="soil-report-item">
-                        <span class="soil-report-item-label" data-lang="organic_matter">Organic Matter</span>
-                        <span class="soil-report-item-value">3.2%</span>
-                    </div>
-                    <div class="soil-report-item">
-                        <span class="soil-report-item-label" data-lang="recommended_crops">Recommended Crops</span>
-                        <span class="soil-report-item-value" data-lang="groundnut_cotton">Groundnut, Cotton, Wheat</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex gap-md mt-xl flex-wrap">
-                <a href="crop-recommendation.html" class="btn btn-primary btn-lg">
-                    <i class="fa-solid fa-seedling"></i>
-                    <span data-lang="get_recommendation">Get Crop Recommendation</span>
-                </a>
-                <button class="btn btn-outline btn-lg" id="downloadReport">
-                    <i class="fa-solid fa-download"></i>
-                    <span data-lang="download_report">Download Report</span>
-                </button>
             </div>
         </div>
     </main>
-
-    <!-- Voice Assistant FAB -->
-    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
-        <i class="fa-solid fa-microphone"></i>
-        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
-    </button>
-
-    <!-- Voice Assistant Overlay -->
-    <div class="voice-overlay" id="voiceOverlay">
-        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        <div class="voice-container">
-            <div class="voice-icon" id="voiceIcon">
-                <i class="fa-solid fa-microphone"></i>
-            </div>
-            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
-            <p class="voice-transcript" id="voiceTranscript"></p>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -343,5 +312,6 @@
     <script src="js/main.js"></script>
     <script src="js/soil-sensor.js"></script>
     <script src="js/voice-assistant.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
