@@ -728,6 +728,7 @@ function updateSeverity(confidence, disease) {
 }
 
 
+
 // ============================================================
 // New Scan
 // ============================================================
@@ -754,4 +755,124 @@ newScanBtn.addEventListener("click", function () {
         top: 0,
         behavior: "smooth"
     });
+});
+
+document.getElementById("downloadReport").addEventListener("click", function () {
+
+    const diseaseName =
+        document.querySelector(".disease-name")?.textContent.trim() || "Unknown Disease";
+
+    const scientificName =
+        document.querySelector(".disease-scientific")?.textContent.trim() || "N/A";
+
+    const confidence =
+        document.querySelector(".disease-confidence strong")?.textContent.trim() || "N/A";
+
+    const description =
+        document.querySelector(".disease-section-content")?.textContent.trim() || "N/A";
+
+    // Collect symptoms
+    const sections = document.querySelectorAll(".disease-section");
+
+    let symptoms = [];
+    let causes = [];
+    let prevention = [];
+
+    sections.forEach(section => {
+        const title = section.querySelector(".disease-section-title")?.textContent
+            .trim()
+            .toLowerCase();
+
+        const items = [...section.querySelectorAll(".disease-list li")]
+            .map(li => li.textContent.trim());
+
+        if (title?.includes("symptom")) {
+            symptoms = items;
+        }
+
+        if (title?.includes("cause")) {
+            causes = items;
+        }
+
+        if (title?.includes("prevention")) {
+            prevention = items;
+        }
+    });
+
+    // Treatment
+    const treatments = [...document.querySelectorAll(".treatment-step")]
+        .map(step => {
+            const title = step.querySelector("strong")?.textContent.trim() || "";
+            const description = step.querySelector("p")?.textContent.trim() || "";
+
+            return `${title}\n${description}`;
+        });
+
+    // Create report text
+    let report = "";
+
+    report += "GREENgrid\n";
+    report += "Smart Agriculture Assistant\n\n";
+
+    report += "PLANT DISEASE DETECTION REPORT\n";
+    report += "====================================\n\n";
+
+    report += `Disease: ${diseaseName}\n`;
+    report += `Scientific Name: ${scientificName}\n`;
+    report += `Confidence: ${confidence}\n\n`;
+
+    report += "ABOUT DISEASE\n";
+    report += "------------------------------------\n";
+    report += `${description}\n\n`;
+
+    report += "SYMPTOMS\n";
+    report += "------------------------------------\n";
+    symptoms.forEach((item, index) => {
+        report += `${index + 1}. ${item}\n`;
+    });
+    report += "\n";
+
+    report += "POSSIBLE CAUSES\n";
+    report += "------------------------------------\n";
+    causes.forEach((item, index) => {
+        report += `${index + 1}. ${item}\n`;
+    });
+    report += "\n";
+
+    report += "RECOMMENDED TREATMENT\n";
+    report += "------------------------------------\n";
+    treatments.forEach((item, index) => {
+        report += `${index + 1}. ${item}\n\n`;
+    });
+
+    report += "PREVENTION TIPS\n";
+    report += "------------------------------------\n";
+    prevention.forEach((item, index) => {
+        report += `${index + 1}. ${item}\n`;
+    });
+    report += "\n";
+
+    report += "DISCLAIMER\n";
+    report += "------------------------------------\n";
+    report += "This AI-based detection is for guidance only. ";
+    report += "For accurate diagnosis, consult an agricultural expert or plant pathologist.\n\n";
+
+    report += `Generated: ${new Date().toLocaleString()}\n`;
+
+    // Create downloadable file
+    const blob = new Blob([report], {
+        type: "text/plain;charset=utf-8"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `GREENgrid_Disease_Report_${Date.now()}.txt`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
 });
