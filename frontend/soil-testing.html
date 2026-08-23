@@ -157,6 +157,47 @@
                     </div>
                     <p class="upload-hint" data-lang="upload_hint">Supports: JPG, PNG, WEBP (Max 5MB)</p>
                 </div>
+
+                <!-- Image Preview -->
+                <div class="image-preview hidden" id="imagePreview">
+                    <img src="" alt="Uploaded plant image" id="previewImage">
+                    <div class="image-preview-actions">
+                        <button class="btn btn-outline" id="removeImage">
+                            <i class="fa-solid fa-trash"></i>
+                            <span data-lang="remove">Remove</span>
+                        </button>
+                        <button class="btn btn-primary" id="analyzeBtn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span data-lang="analyze">Analyze Disease</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processing Animation -->
+            <div class="processing-section hidden" id="processingSection">
+                <div class="processing-animation">
+                    <div class="processing-spinner">
+                        <i class="fa-solid fa-microscope"></i>
+                    </div>
+                    <h3 class="processing-title" data-lang="analyzing_image">Analyzing Image...</h3>
+                    <p class="processing-desc" data-lang="processing_desc">Our AI is examining the plant for disease signs</p>
+                    <div class="progress-bar mt-lg">
+                        <div class="progress-bar-fill" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section hidden" id="resultsSection">
+                <div class="results-header">
+                    <h2 class="results-title" data-lang="detection_result">Detection Result</h2>
+                    <button class="btn btn-outline" id="newScanBtn">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span data-lang="new_scan">New Scan</span>
+                    </button>
+                </div>
+
             <!-- Sensor Status -->
             <div class="sensor-status connected" id="sensorStatus">
                 <div class="sensor-status-indicator"></div>
