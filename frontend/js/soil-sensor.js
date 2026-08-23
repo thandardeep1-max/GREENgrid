@@ -291,16 +291,71 @@ function downloadSoilReport() {
         recommendedCrops: ['Groundnut', 'Cotton', 'Wheat']
     };
 
-    // Create downloadable JSON
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `soil-report-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    // Generate PDF using jsPDF (included via CDN in the HTML)
+    try {
+        // Support both UMD build (window.jspdf.jsPDF) and global (window.jsPDF)
+        let jsPDFConstructor = null;
+        if (window.jspdf && typeof window.jspdf.jsPDF === 'function') {
+            jsPDFConstructor = window.jspdf.jsPDF;
+        } else if (typeof window.jsPDF === 'function') {
+            jsPDFConstructor = window.jsPDF;
+        } else {
+            throw new Error('jsPDF library not found. Make sure the script is included before soil-sensor.js');
+        }
 
-    window.showToast('Soil report downloaded successfully!', 'success');
+        const doc = new jsPDFConstructor();
+
+        doc.setFontSize(16);
+        doc.text('Soil Health Report', 20, 20);
+
+        doc.setFontSize(12);
+        const lines = [
+            `Date: ${report.date}`,
+            `Time: ${report.time}`,
+            '',
+            'Parameters:',
+            `- pH: ${report.parameters.ph}`,
+            `- Moisture: ${report.parameters.moisture}`,
+            `- Temperature: ${report.parameters.temperature}`,
+            `- Nitrogen: ${report.parameters.nitrogen}`,
+            `- Phosphorus: ${report.parameters.phosphorus}`,
+            `- Potassium: ${report.parameters.potassium}`,
+            '',
+            'Analysis:',
+            `- Soil Type: ${report.analysis.soilType}`,
+            `- Fertility: ${report.analysis.fertility}`,
+            `- Drainage: ${report.analysis.drainage}`,
+            `- Organic Matter: ${report.analysis.organicMatter}`,
+            '',
+            `Recommended Crops: ${report.recommendedCrops.join(', ')}`
+        ];
+
+        let y = 30;
+        const pageHeight = 297; // A4 portrait height in mm for reference
+        lines.forEach(line => {
+            const split = doc.splitTextToSize(line, 170);
+            doc.text(split, 20, y);
+            y += (split.length) * 7 + 4;
+            if (y > (pageHeight - 20)) { doc.addPage(); y = 20; }
+        });
+
+        const filename = `soil-report-${new Date().toISOString().split('T')[0]}.pdf`;
+        doc.save(filename);
+
+        if (window.showToast) window.showToast('Soil report downloaded successfully!', 'success');
+    } catch (e) {
+        console.error('PDF generation error', e);
+        if (window.showToast) window.showToast('Failed to generate PDF, downloading JSON instead', 'error');
+
+        // Fallback to JSON download
+        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `soil-report-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
 }
 
 // ============================================
