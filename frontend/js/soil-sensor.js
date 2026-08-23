@@ -3,6 +3,22 @@
  * Soil Sensor - Arduino Integration via Serial/API
  */
 
+const formData = new FormData();
+formData.append("file", selectedFile);
+
+const response = await fetch(
+    "http://127.0.0.1:8000/predict-soil",
+    {
+        method: "POST",
+        body: formData
+    }
+);
+
+const result = await response.json();
+
+console.log(result.soil_type);
+console.log(result.confidence);
+
 // ============================================
 // Configuration
 // ============================================
