@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Testing - Smart Agriculture Assistant</title>
+    <meta name="description" content="Test your soil parameters with IoT sensors">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link active">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span data-lang="nav_settings">Settings</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link active"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="soil_testing">Soil Testing</span>
+                </div>
+                <h1 class="page-title" data-lang="soil_testing_title">🧪 Smart Soil Testing</h1>
+                <p class="page-subtitle" data-lang="soil_testing_subtitle">Analyze your soil parameters using IoT sensors</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Sensor Status -->
+            <div class="sensor-status connected" id="sensorStatus">
+                <div class="sensor-status-indicator"></div>
+                <div class="sensor-status-info">
+                    <div class="sensor-status-title" data-lang="sensor_connected">Arduino Sensor Connected</div>
+                    <div class="sensor-status-desc" data-lang="sensor_reading">Reading soil parameters...</div>
+                </div>
+                <div class="sensor-status-action">
+                    <button class="btn btn-outline btn-sm" id="refreshSensor">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span data-lang="refresh">Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Soil Parameters Grid -->
+            <div class="soil-params-grid">
+                <!-- pH Level -->
+                <div class="soil-param-card ph">
+                    <div class="soil-param-icon">🧪</div>
+                    <div class="soil-param-value" id="phValue">6.5</div>
+                    <div class="soil-param-unit">pH</div>
+                    <div class="soil-param-label" data-lang="ph_level">pH Level</div>
+                    <div class="soil-param-status normal" id="phStatus" data-lang="normal">Normal</div>
+                </div>
+
+                <!-- Moisture -->
+                <div class="soil-param-card moisture">
+                    <div class="soil-param-icon">💧</div>
+                    <div class="soil-param-value" id="moistureValue">45</div>
+                    <div class="soil-param-unit">%</div>
+                    <div class="soil-param-label" data-lang="moisture">Moisture</div>
+                    <div class="soil-param-status normal" id="moistureStatus" data-lang="normal">Normal</div>
+                </div>
+
+                <!-- Temperature -->
+                <div class="soil-param-card temp">
+                    <div class="soil-param-icon">🌡️</div>
+                    <div class="soil-param-value" id="tempValue">28</div>
+                    <div class="soil-param-unit">°C</div>
+                    <div class="soil-param-label" data-lang="temperature">Temperature</div>
+                    <div class="soil-param-status normal" id="tempStatus" data-lang="normal">Normal</div>
+                </div>
+
+                <!-- NPK -->
+                <div class="soil-param-card npk">
+                    <div class="soil-param-icon">🌱</div>
+                    <div class="soil-param-value" id="npkValue">N:40</div>
+                    <div class="soil-param-unit">P:20 K:30</div>
+                    <div class="soil-param-label" data-lang="npk">NPK Level</div>
+                    <div class="soil-param-status normal" id="npkStatus" data-lang="normal">Normal</div>
+                </div>
+            </div>
+
+            <!-- Soil Health Report -->
+            <div class="soil-report">
+                <div class="soil-report-header">
+                    <h2 class="soil-report-title" data-lang="soil_health_report">📊 Soil Health Report</h2>
+                </div>
+                <div class="soil-report-body">
+                    <div class="soil-report-item">
+                        <span class="soil-report-item-label" data-lang="soil_type">Soil Type</span>
+                        <span class="soil-report-item-value" data-lang="loamy">Loamy Soil</span>
+                    </div>
+                    <div class="soil-report-item">
+                        <span class="soil-report-item-label" data-lang="fertility">Fertility Level</span>
+                        <span class="soil-report-item-value" data-lang="moderate">Moderate</span>
+                    </div>
+                    <div class="soil-report-item">
+                        <span class="soil-report-item-label" data-lang="drainage">Drainage</span>
+                        <span class="soil-report-item-value" data-lang="good">Good</span>
+                    </div>
+                    <div class="soil-report-item">
+                        <span class="soil-report-item-label" data-lang="organic_matter">Organic Matter</span>
+                        <span class="soil-report-item-value">3.2%</span>
+                    </div>
+                    <div class="soil-report-item">
+                        <span class="soil-report-item-label" data-lang="recommended_crops">Recommended Crops</span>
+                        <span class="soil-report-item-value" data-lang="groundnut_cotton">Groundnut, Cotton, Wheat</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-md mt-xl flex-wrap">
+                <a href="crop-recommendation.html" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-seedling"></i>
+                    <span data-lang="get_recommendation">Get Crop Recommendation</span>
+                </a>
+                <button class="btn btn-outline btn-lg" id="downloadReport">
+                    <i class="fa-solid fa-download"></i>
+                    <span data-lang="download_report">Download Report</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                </div>
+                <div class="footer-copyright">© 2026 GREENgrid - Smart Agriculture Assistant</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/soil-sensor.js"></script>
+    <script src="js/voice-assistant.js"></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn/ui CSS Variables */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 142 71% 25%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 214 84% 27%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 48 96% 57%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 71% 25%;
+    --radius: 0.5rem;
+
+    /* GREENgrid Custom Colors */
+    --agri-primary: 142 71% 25%;
+    --agri-primary-light: 142 71% 41%;
+    --agri-primary-dark: 142 71% 15%;
+    --agri-primary-bg: 142 39% 88%;
+    --agri-secondary: 214 84% 27%;
+    --agri-secondary-light: 214 84% 44%;
+    --agri-secondary-dark: 214 84% 16%;
+    --agri-secondary-bg: 214 67% 94%;
+    --agri-accent: 48 96% 57%;
+    --agri-accent-light: 48 96% 68%;
+    --agri-accent-dark: 48 96% 43%;
+    --agri-accent-bg: 48 100% 97%;
+    --agri-earth: 29 34% 44%;
+    --agri-earth-light: 29 34% 56%;
+    --agri-earth-dark: 29 34% 29%;
+    --agri-earth-bg: 29 26% 91%;
+    --agri-success: 142 71% 41%;
+    --agri-success-bg: 142 39% 88%;
+    --agri-warning: 38 100% 50%;
+    --agri-warning-bg: 38 100% 95%;
+    --agri-error: 0 72% 51%;
+    --agri-error-bg: 0 100% 97%;
+    --agri-info: 214 84% 44%;
+    --agri-info-bg: 214 67% 94%;
+
+    /* Typography */
+    --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-button: 0 2px 4px rgba(0, 0, 0, 0.12);
+    --shadow-fab: 0 4px 12px rgba(46, 125, 50, 0.4);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+    --transition-slow: 350ms ease;
+
+    /* Z-Index */
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-fixed: 300;
+    --z-modal-backdrop: 400;
+    --z-modal: 500;
+    --z-popover: 600;
+    --z-tooltip: 700;
+
+    /* Layout */
+    --container-max-width: 1280px;
+    --header-height: 64px;
+    --footer-height: 56px;
+    --sidebar-width: 280px;
+
+    /* Floating Navbar */
+    --navbar-width: 75%;
+    --navbar-max-width: 1200px;
+    --navbar-top-margin: 1.5rem;
+    --navbar-height: 3.5rem;
+    --navbar-border-radius: 1.5rem;
+    --navbar-bg: hsl(var(--background) / 0.85);
+    --navbar-border: hsl(var(--border) / 0.3);
+    --navbar-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --navbar-glow: 0 0 30px rgba(46, 125, 50, 0.12);
+
+    /* Touch Targets */
+    --touch-target-min: 44px;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 142 71% 41%;
+    --primary-foreground: 142 71% 15%;
+    --secondary: 214 84% 44%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 48 96% 57%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142 71% 41%;
+
+    /* GREENgrid Dark Mode Colors */
+    --agri-primary: 142 71% 41%;
+    --agri-primary-light: 142 71% 50%;
+    --agri-primary-dark: 142 71% 30%;
+    --agri-primary-bg: 142 39% 15%;
+    --agri-secondary: 214 84% 44%;
+    --agri-secondary-light: 214 84% 55%;
+    --agri-secondary-dark: 214 84% 30%;
+    --agri-secondary-bg: 214 67% 15%;
+    --agri-accent: 48 96% 57%;
+    --agri-accent-light: 48 96% 68%;
+    --agri-accent-dark: 48 96% 43%;
+    --agri-accent-bg: 48 100% 15%;
+    --agri-earth: 29 34% 56%;
+    --agri-earth-light: 29 34% 65%;
+    --agri-earth-dark: 29 34% 40%;
+    --agri-earth-bg: 29 26% 15%;
+    --agri-success: 142 71% 41%;
+    --agri-success-bg: 142 39% 15%;
+    --agri-warning: 38 100% 50%;
+    --agri-warning-bg: 38 100% 15%;
+    --agri-error: 0 72% 51%;
+    --agri-error-bg: 0 100% 15%;
+    --agri-info: 214 84% 44%;
+    --agri-info-bg: 214 67% 15%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .container-custom {
+    @apply max-w-[var(--container-max-width)] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Z-index utilities matching semantic scale from static CSS */
+  .z-dropdown {
+    z-index: var(--z-dropdown);
+  }
+  .z-sticky {
+    z-index: var(--z-sticky);
+  }
+  .z-fixed {
+    z-index: var(--z-fixed);
+  }
+  .z-modal-backdrop {
+    z-index: var(--z-modal-backdrop);
+  }
+  .z-modal {
+    z-index: var(--z-modal);
+  }
+  .z-popover {
+    z-index: var(--z-popover);
+  }
+  .z-tooltip {
+    z-index: var(--z-tooltip);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Focus visible styles */
+.focus-visible-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+}
+
+/* Voice assistant animations */
+.voice-listening {
+  @apply animate-pulse-soft;
+}
+
+.voice-processing {
+  @apply animate-spin;
+}
+
+/* Mobile navigation slide animation */
+.mobile-nav-enter {
+  @apply animate-slide-in-from-top;
+}
+
+.mobile-nav-exit {
+  @apply animate-slide-in-from-bottom;
+}
+
+/* Language dropdown animation */
+.lang-dropdown-enter {
+  @apply animate-fade-in animate-slide-in-from-top;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Button loading state */
+.btn-loading {
+  @apply relative overflow-hidden;
+}
+
+.btn-loading::after {
+  content: '';
+  @apply absolute inset-0 bg-current/20 animate-pulse;
+}

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Detection - Smart Agriculture Assistant</title>
+    <meta name="description" content="Identify plant diseases from photos and get protection remedies">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link active"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="nav_disease">Disease Detection</span>
+                </div>
+                <h1 class="page-title" data-lang="disease_title">📷 Plant Disease Detection</h1>
+                <p class="page-subtitle" data-lang="disease_subtitle">Upload a photo to identify plant diseases and get remedies</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Upload Section -->
+            <div class="disease-upload-section" id="uploadSection">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3 class="upload-title" data-lang="upload_photo">Upload Plant Photo</h3>
+                    <p class="upload-desc" data-lang="upload_desc">Drag and drop an image here, or click to select</p>
+                    <div class="upload-actions">
+                        <label class="btn btn-primary btn-lg">
+                            <i class="fa-solid fa-image"></i>
+                            <span data-lang="choose_file">Choose File</span>
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                        </label>
+                        <button class="btn btn-outline btn-lg" id="cameraBtn">
+                            <i class="fa-solid fa-camera"></i>
+                            <span data-lang="take_photo">Take Photo</span>
+                        </button>
+                    </div>
+                    <p class="upload-hint" data-lang="upload_hint">Supports: JPG, PNG, WEBP (Max 5MB)</p>
+                </div>
+
+                <!-- Image Preview -->
+                <div class="image-preview hidden" id="imagePreview">
+                    <img src="" alt="Uploaded plant image" id="previewImage">
+                    <div class="image-preview-actions">
+                        <button class="btn btn-outline" id="removeImage">
+                            <i class="fa-solid fa-trash"></i>
+                            <span data-lang="remove">Remove</span>
+                        </button>
+                        <button class="btn btn-primary" id="analyzeBtn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span data-lang="analyze">Analyze Disease</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processing Animation -->
+            <div class="processing-section hidden" id="processingSection">
+                <div class="processing-animation">
+                    <div class="processing-spinner">
+                        <i class="fa-solid fa-microscope"></i>
+                    </div>
+                    <h3 class="processing-title" data-lang="analyzing_image">Analyzing Image...</h3>
+                    <p class="processing-desc" data-lang="processing_desc">Our AI is examining the plant for disease signs</p>
+                    <div class="progress-bar mt-lg">
+                        <div class="progress-bar-fill" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section hidden" id="resultsSection">
+                <div class="results-header">
+                    <h2 class="results-title" data-lang="detection_result">Detection Result</h2>
+                    <button class="btn btn-outline" id="newScanBtn">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span data-lang="new_scan">New Scan</span>
+                    </button>
+                </div>
+
+                <!-- Disease Result Card -->
+                <div class="disease-result-card">
+                    <div class="disease-result-header">
+                        <div class="disease-image">
+                            <img src="" alt="Plant image" id="resultImage">
+                        </div>
+                        <div class="disease-info">
+                            <div class="disease-badge severity-high">
+                                <i class="fa-solid fa-exclamation-triangle"></i>
+                                <span data-lang="severity_high">High Severity</span>
+                            </div>
+                            <h3 class="disease-name" data-lang="leaf_spot">Leaf Spot Disease</h3>
+                            <p class="disease-scientific">Cercospora arachidicola</p>
+                            <div class="disease-confidence">
+                                <span data-lang="confidence">Confidence:</span>
+                                <strong>87%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="disease-result-body">
+                        <!-- About Disease -->
+                        <div class="disease-section">
+                            <h4 class="disease-section-title">
+                                <i class="fa-solid fa-info-circle"></i>
+                                <span data-lang="about_disease">About Disease</span>
+                            </h4>
+                            <p class="disease-section-content" data-lang="leaf_spot_desc">
+                                Leaf spot is a fungal disease that causes circular brown spots on leaves. It spreads through water splashing and can significantly reduce yield if not treated early.
+                            </p>
+                        </div>
+
+                        <!-- Symptoms -->
+                        <div class="disease-section">
+                            <h4 class="disease-section-title">
+                                <i class="fa-solid fa-stethoscope"></i>
+                                <span data-lang="symptoms">Symptoms</span>
+                            </h4>
+                            <ul class="disease-list">
+                                <li data-lang="symptom_1">Circular brown spots on leaves with yellow halos</li>
+                                <li data-lang="symptom_2">Spots may merge to form larger dead areas</li>
+                                <li data-lang="symptom_3">Yellowing and premature leaf drop</li>
+                                <li data-lang="symptom_4">Reduced photosynthesis affecting plant growth</li>
+                            </ul>
+                        </div>
+
+                        <!-- Causes -->
+                        <div class="disease-section">
+                            <h4 class="disease-section-title">
+                                <i class="fa-solid fa-search"></i>
+                                <span data-lang="causes">Possible Causes</span>
+                            </h4>
+                            <ul class="disease-list">
+                                <li data-lang="cause_1">High humidity and warm temperatures</li>
+                                <li data-lang="cause_2">Poor air circulation between plants</li>
+                                <li data-lang="cause_3">Overhead irrigation spreading spores</li>
+                                <li data-lang="cause_4">Infected plant debris in soil</li>
+                            </ul>
+                        </div>
+
+                        <!-- Treatment -->
+                        <div class="disease-section treatment">
+                            <h4 class="disease-section-title">
+                                <i class="fa-solid fa-prescription-bottle-medical"></i>
+                                <span data-lang="treatment">Recommended Treatment</span>
+                            </h4>
+                            <div class="treatment-steps">
+                                <div class="treatment-step">
+                                    <div class="treatment-step-number">1</div>
+                                    <div class="treatment-step-content">
+                                        <strong data-lang="treatment_1_title">Remove Infected Leaves</strong>
+                                        <p data-lang="treatment_1_desc">Carefully remove and destroy infected leaves to prevent spread.</p>
+                                    </div>
+                                </div>
+                                <div class="treatment-step">
+                                    <div class="treatment-step-number">2</div>
+                                    <div class="treatment-step-content">
+                                        <strong data-lang="treatment_2_title">Apply Fungicide</strong>
+                                        <p data-lang="treatment_2_desc">Use Mancozeb or Chlorothalonil-based fungicide as per label instructions.</p>
+                                    </div>
+                                </div>
+                                <div class="treatment-step">
+                                    <div class="treatment-step-number">3</div>
+                                    <div class="treatment-step-content">
+                                        <strong data-lang="treatment_3_title">Improve Air Circulation</strong>
+                                        <p data-lang="treatment_3_desc">Prune dense foliage and ensure proper plant spacing.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prevention -->
+                        <div class="disease-section prevention">
+                            <h4 class="disease-section-title">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span data-lang="prevention">Prevention Tips</span>
+                            </h4>
+                            <ul class="disease-list prevention-list">
+                                <li><i class="fa-solid fa-check"></i> <span data-lang="prevention_1">Use disease-resistant varieties</span></li>
+                                <li><i class="fa-solid fa-check"></i> <span data-lang="prevention_2">Practice crop rotation every 2-3 years</span></li>
+                                <li><i class="fa-solid fa-check"></i> <span data-lang="prevention_3">Avoid overhead irrigation; use drip irrigation</span></li>
+                                <li><i class="fa-solid fa-check"></i> <span data-lang="prevention_4">Remove and destroy plant debris after harvest</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Disclaimer -->
+                        <div class="disclaimer">
+                            <i class="fa-solid fa-exclamation-circle"></i>
+                            <p data-lang="disclaimer">This AI-based detection is for guidance only. For accurate diagnosis, consult an agricultural expert or plant pathologist.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="result-actions">
+                    <a href="crop-calendar.html" class="btn btn-primary">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span data-lang="update_calendar">Update Crop Calendar</span>
+                    </a>
+                    <button class="btn btn-outline" id="downloadReport">
+                        <i class="fa-solid fa-download"></i>
+                        <span data-lang="download_report">Download Report</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                </div>
+                <div class="footer-copyright">© 2026 GREENgrid - Smart Agriculture Assistant</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/disease-detection.js"></script>
+    <script src="js/voice-assistant.js"></script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation - Smart Agriculture Assistant</title>
+    <meta name="description" content="Get personalized crop recommendations based on soil, weather, and location">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link active"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="crop_rec">Crop Recommendation</span>
+                </div>
+                <h1 class="page-title" data-lang="crop_rec_title">🌱 Crop Recommendation</h1>
+                <p class="page-subtitle" data-lang="crop_rec_subtitle">Find the best crops for your farm conditions</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Stepper -->
+            <div class="stepper">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span class="step-label" data-lang="step_location">Location</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span class="step-label" data-lang="step_soil">Soil & Water</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span class="step-label" data-lang="step_results">Results</span>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form class="recommendation-form" id="recommendationForm">
+                <!-- Step 1: Location & Season -->
+                <div class="form-section" id="step1">
+                    <h3 class="form-section-title">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span data-lang="location_season">Location & Season</span>
+                    </h3>
+                    <div class="form-row">
+                        <div class="field">
+                            <label class="label" for="state" data-lang="state">State</label>
+                            <div class="select-wrapper">
+                                <select class="select" id="state" name="state" required>
+                                    <option value="" data-lang="select_state">Select State</option>
+                                    <option value="gujarat">Gujarat</option>
+                                    <option value="maharashtra">Maharashtra</option>
+                                    <option value="rajasthan">Rajasthan</option>
+                                    <option value="punjab">Punjab</option>
+                                    <option value="haryana">Haryana</option>
+                                    <option value="uttar-pradesh">Uttar Pradesh</option>
+                                    <option value="madhya-pradesh">Madhya Pradesh</option>
+                                    <option value="karnataka">Karnataka</option>
+                                    <option value="tamil-nadu">Tamil Nadu</option>
+                                    <option value="andhra-pradesh">Andhra Pradesh</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="district" data-lang="district">District</label>
+                            <input type="text" class="input" id="district" name="district" placeholder="Enter your district">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="field">
+                            <label class="label" for="season" data-lang="season">Season</label>
+                            <div class="select-wrapper">
+                                <select class="select" id="season" name="season" required>
+                                    <option value="" data-lang="select_season">Select Season</option>
+                                    <option value="kharif">Kharif (Monsoon)</option>
+                                    <option value="rabi">Rabi (Winter)</option>
+                                    <option value="zaid">Zaid (Summer)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="farmSize" data-lang="farm_size">Farm Size (Acres)</label>
+                            <input type="number" class="input" id="farmSize" name="farmSize" placeholder="e.g., 5" min="0.1" step="0.1">
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-lg">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="nextStep(2)">
+                            <span data-lang="next">Next</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Soil & Water -->
+                <div class="form-section hidden" id="step2">
+                    <h3 class="form-section-title">
+                        <i class="fa-solid fa-droplet"></i>
+                        <span data-lang="soil_water">Soil & Water Availability</span>
+                    </h3>
+                    <div class="form-row">
+                        <div class="field">
+                            <label class="label" for="soilType" data-lang="soil_type">Soil Type</label>
+                            <div class="select-wrapper">
+                                <select class="select" id="soilType" name="soilType" required>
+                                    <option value="" data-lang="select_soil">Select Soil Type</option>
+                                    <option value="alluvial">Alluvial Soil</option>
+                                    <option value="black">Black Soil (Regur)</option>
+                                    <option value="red">Red Soil</option>
+                                    <option value="laterite">Laterite Soil</option>
+                                    <option value="sandy">Sandy Soil</option>
+                                    <option value="loamy">Loamy Soil</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="soilPh" data-lang="soil_ph">Soil pH</label>
+                            <input type="number" class="input" id="soilPh" name="soilPh" placeholder="e.g., 6.5" min="0" max="14" step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="field">
+                            <label class="label" for="waterSource" data-lang="water_source">Water Source</label>
+                            <div class="select-wrapper">
+                                <select class="select" id="waterSource" name="waterSource" required>
+                                    <option value="" data-lang="select_water">Select Water Source</option>
+                                    <option value="canal">Canal Irrigation</option>
+                                    <option value="well">Well/Borewell</option>
+                                    <option value="rainfed">Rainfed</option>
+                                    <option value="river">River</option>
+                                    <option value="pond">Pond/Tank</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="waterAvailability" data-lang="water_avail">Water Availability</label>
+                            <div class="select-wrapper">
+                                <select class="select" id="waterAvailability" name="waterAvailability" required>
+                                    <option value="" data-lang="select_avail">Select Availability</option>
+                                    <option value="abundant">Abundant</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="limited">Limited</option>
+                                    <option value="scarce">Scarce</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="field">
+                            <label class="label" for="irrigation" data-lang="irrigation_type">Irrigation Type</label>
+                            <div class="select-wrapper">
+                                <select class="select" id="irrigation" name="irrigation">
+                                    <option value="" data-lang="select_irrigation">Select Irrigation Type</option>
+                                    <option value="drip">Drip Irrigation</option>
+                                    <option value="sprinkler">Sprinkler</option>
+                                    <option value="flood">Flood Irrigation</option>
+                                    <option value="furrow">Furrow Irrigation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="budget" data-lang="budget">Budget (₹)</label>
+                            <input type="number" class="input" id="budget" name="budget" placeholder="e.g., 50000" min="0">
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-lg">
+                        <button type="button" class="btn btn-outline btn-lg" onclick="prevStep(1)">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span data-lang="previous">Previous</span>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-lg" onclick="getRecommendations()">
+                            <i class="fa-solid fa-seedling"></i>
+                            <span data-lang="get_recommendation">Get Recommendations</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Results -->
+                <div class="form-section hidden" id="step3">
+                    <h3 class="form-section-title">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span data-lang="recommended_crops">Recommended Crops</span>
+                    </h3>
+                    <p class="text-secondary mb-lg" data-lang="based_on">Based on your farm conditions, here are the best crop options:</p>
+
+                    <div class="crop-grid" id="cropResults">
+                        <!-- Crop Card 1 -->
+                        <div class="crop-card">
+                            <div class="crop-card-header">
+                                <div class="crop-icon">🥜</div>
+                                <h4 class="crop-name">Groundnut</h4>
+                            </div>
+                            <div class="crop-card-body">
+                                <div class="crop-suitability">
+                                    <span class="crop-suitability-label" data-lang="suitability">Suitability</span>
+                                    <span class="crop-suitability-value high" data-lang="high">High</span>
+                                </div>
+                                <p class="crop-reason" data-lang="groundnut_reason">Suitable soil conditions + current season + available water</p>
+                                <div class="crop-details">
+                                    <span class="crop-detail"><i class="fa-solid fa-calendar"></i> 120 days</span>
+                                    <span class="crop-detail"><i class="fa-solid fa-droplet"></i> Low water</span>
+                                    <span class="crop-detail"><i class="fa-solid fa-rupee-sign"></i> ₹30,000/acre</span>
+                                </div>
+                            </div>
+                            <div class="crop-card-footer">
+                                <a href="crop-calendar.html?crop=groundnut" class="btn btn-primary btn-block">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    <span data-lang="start_growing">Start Growing</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Crop Card 2 -->
+                        <div class="crop-card">
+                            <div class="crop-card-header">
+                                <div class="crop-icon">🌾</div>
+                                <h4 class="crop-name">Cotton</h4>
+                            </div>
+                            <div class="crop-card-body">
+                                <div class="crop-suitability">
+                                    <span class="crop-suitability-label" data-lang="suitability">Suitability</span>
+                                    <span class="crop-suitability-value high" data-lang="high">High</span>
+                                </div>
+                                <p class="crop-reason" data-lang="cotton_reason">Ideal for black soil with moderate water requirements</p>
+                                <div class="crop-details">
+                                    <span class="crop-detail"><i class="fa-solid fa-calendar"></i> 180 days</span>
+                                    <span class="crop-detail"><i class="fa-solid fa-droplet"></i> Medium water</span>
+                                    <span class="crop-detail"><i class="fa-solid fa-rupee-sign"></i> ₹45,000/acre</span>
+                                </div>
+                            </div>
+                            <div class="crop-card-footer">
+                                <a href="crop-calendar.html?crop=cotton" class="btn btn-primary btn-block">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    <span data-lang="start_growing">Start Growing</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Crop Card 3 -->
+                        <div class="crop-card">
+                            <div class="crop-card-header">
+                                <div class="crop-icon">🌽</div>
+                                <h4 class="crop-name">Maize</h4>
+                            </div>
+                            <div class="crop-card-body">
+                                <div class="crop-suitability">
+                                    <span class="crop-suitability-label" data-lang="suitability">Suitability</span>
+                                    <span class="crop-suitability-value medium" data-lang="medium">Medium</span>
+                                </div>
+                                <p class="crop-reason" data-lang="maize_reason">Good yield potential with available resources</p>
+                                <div class="crop-details">
+                                    <span class="crop-detail"><i class="fa-solid fa-calendar"></i> 90 days</span>
+                                    <span class="crop-detail"><i class="fa-solid fa-droplet"></i> Medium water</span>
+                                    <span class="crop-detail"><i class="fa-solid fa-rupee-sign"></i> ₹25,000/acre</span>
+                                </div>
+                            </div>
+                            <div class="crop-card-footer">
+                                <a href="crop-calendar.html?crop=maize" class="btn btn-primary btn-block">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    <span data-lang="start_growing">Start Growing</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-xl">
+                        <button type="button" class="btn btn-outline btn-lg" onclick="prevStep(2)">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span data-lang="modify_inputs">Modify Inputs</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-lg" onclick="saveRecommendations()">
+                            <i class="fa-solid fa-save"></i>
+                            <span data-lang="save_results">Save Results</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                </div>
+                <div class="footer-copyright">© 2026 GREENgrid - Smart Agriculture Assistant</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/voice-assistant.js"></script>
+    <script>
+        // Step Navigation
+        function nextStep(step) {
+            document.querySelectorAll('.form-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step' + step).classList.remove('hidden');
+
+            document.querySelectorAll('.step').forEach((s, i) => {
+                s.classList.remove('active', 'completed');
+                if (i + 1 < step) s.classList.add('completed');
+                if (i + 1 === step) s.classList.add('active');
+            });
+        }
+
+        function prevStep(step) {
+            nextStep(step);
+        }
+
+        function getRecommendations() {
+            // Show loading state
+            const resultsDiv = document.getElementById('cropResults');
+            resultsDiv.innerHTML = '<div class="flex justify-center py-xl"><div class="spinner spinner-lg"></div></div>';
+
+            // Simulate API call
+            setTimeout(() => {
+                nextStep(3);
+                // Results are already in HTML (step3), just show them
+            }, 1500);
+        }
+
+        function saveRecommendations() {
+            alert('Recommendations saved successfully!');
+        }
+    </script>
+</body>
+</html>

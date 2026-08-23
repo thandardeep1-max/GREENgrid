@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Alerts - Smart Agriculture Assistant</title>
+    <meta name="description" content="Weather updates and agriculture-specific alerts for farmers">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link active">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+                <a href="settings.html" class="nav-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span data-lang="nav_settings">Settings</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link active"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </div>
+                <h1 class="page-title" data-lang="weather_title">🌦️ Weather Alerts</h1>
+                <p class="page-subtitle" data-lang="weather_subtitle">Weather updates for smart farming decisions</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Current Weather Card -->
+            <div class="weather-current">
+                <div class="weather-current-main">
+                    <div class="weather-current-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span id="weatherLocation">Gujarat, India</span>
+                    </div>
+                    <div class="weather-current-date" id="weatherDate">Tuesday, August 19, 2026</div>
+                </div>
+                <div class="weather-current-body">
+                    <div class="weather-current-icon">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                    </div>
+                    <div class="weather-current-temp">
+                        <span id="currentTemp">32</span>°C
+                    </div>
+                    <div class="weather-current-desc" id="currentDesc">Partly Cloudy</div>
+                </div>
+                <div class="weather-current-details">
+                    <div class="weather-detail-item">
+                        <i class="fa-solid fa-droplet"></i>
+                        <div class="weather-detail-content">
+                            <div class="weather-detail-value"><span id="humidity">65</span>%</div>
+                            <div class="weather-detail-label" data-lang="humidity">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <i class="fa-solid fa-wind"></i>
+                        <div class="weather-detail-content">
+                            <div class="weather-detail-value"><span id="windSpeed">12</span> km/h</div>
+                            <div class="weather-detail-label" data-lang="wind">Wind</div>
+                        </div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <i class="fa-solid fa-cloud-rain"></i>
+                        <div class="weather-detail-content">
+                            <div class="weather-detail-value"><span id="rainChance">20</span>%</div>
+                            <div class="weather-detail-label" data-lang="rain_chance">Rain Chance</div>
+                        </div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <i class="fa-solid fa-sun"></i>
+                        <div class="weather-detail-content">
+                            <div class="weather-detail-value"><span id="uvIndex">6</span></div>
+                            <div class="weather-detail-label" data-lang="uv_index">UV Index</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agriculture Alerts -->
+            <section class="mt-2xl">
+                <h2 class="section-title" data-lang="agri_alerts">Agriculture Alerts</h2>
+                <p class="section-subtitle" data-lang="agri_alerts_desc">Weather-based recommendations for your crops</p>
+
+                <div class="alert-list">
+                    <!-- Rain Alert -->
+                    <div class="alert-item warning">
+                        <div class="alert-icon">
+                            <i class="fa-solid fa-cloud-showers-heavy"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-title" data-lang="alert_heavy_rain">Heavy Rain Expected Tomorrow</div>
+                            <div class="alert-message" data-lang="alert_heavy_rain_desc">Expected rainfall: 40-60mm. Avoid fertilizer application. Check drainage systems.</div>
+                            <div class="alert-action" data-lang="alert_heavy_rain_action">Recommended: Delay irrigation for 2 days</div>
+                        </div>
+                        <div class="alert-time">Tomorrow</div>
+                    </div>
+
+                    <!-- Temperature Alert -->
+                    <div class="alert-item info">
+                        <div class="alert-icon">
+                            <i class="fa-solid fa-temperature-high"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-title" data-lang="alert_high_temp">High Temperature Alert</div>
+                            <div class="alert-message" data-lang="alert_high_temp_desc">Temperature may reach 38°C in the afternoon. Monitor soil moisture closely.</div>
+                            <div class="alert-action" data-lang="alert_high_temp_action">Recommended: Irrigate early morning or evening</div>
+                        </div>
+                        <div class="alert-time">Today</div>
+                    </div>
+
+                    <!-- Wind Alert -->
+                    <div class="alert-item info">
+                        <div class="alert-icon">
+                            <i class="fa-solid fa-wind"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-title" data-lang="alert_wind">Moderate Winds Expected</div>
+                            <div class="alert-message" data-lang="alert_wind_desc">Wind speeds of 20-25 km/h expected. Avoid pesticide spraying.</div>
+                            <div class="alert-action" data-lang="alert_wind_action">Recommended: Spray after wind settles</div>
+                        </div>
+                        <div class="alert-time">Day After</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5-Day Forecast -->
+            <section class="mt-2xl">
+                <h2 class="section-title" data-lang="forecast_5day">5-Day Forecast</h2>
+
+                <div class="forecast-grid">
+                    <!-- Day 1 -->
+                    <div class="forecast-card">
+                        <div class="forecast-day">Today</div>
+                        <div class="forecast-date">Aug 19</div>
+                        <div class="forecast-icon"><i class="fa-solid fa-cloud-sun"></i></div>
+                        <div class="forecast-temp">32° / 26°</div>
+                        <div class="forecast-desc">Partly Cloudy</div>
+                        <div class="forecast-details">
+                            <span><i class="fa-solid fa-droplet"></i> 65%</span>
+                            <span><i class="fa-solid fa-wind"></i> 12 km/h</span>
+                        </div>
+                    </div>
+
+                    <!-- Day 2 -->
+                    <div class="forecast-card warning">
+                        <div class="forecast-day">Tomorrow</div>
+                        <div class="forecast-date">Aug 20</div>
+                        <div class="forecast-icon"><i class="fa-solid fa-cloud-showers-heavy"></i></div>
+                        <div class="forecast-temp">29° / 24°</div>
+                        <div class="forecast-desc">Heavy Rain</div>
+                        <div class="forecast-details">
+                            <span><i class="fa-solid fa-droplet"></i> 85%</span>
+                            <span><i class="fa-solid fa-wind"></i> 18 km/h</span>
+                        </div>
+                    </div>
+
+                    <!-- Day 3 -->
+                    <div class="forecast-card">
+                        <div class="forecast-day">Thursday</div>
+                        <div class="forecast-date">Aug 21</div>
+                        <div class="forecast-icon"><i class="fa-solid fa-cloud"></i></div>
+                        <div class="forecast-temp">30° / 25°</div>
+                        <div class="forecast-desc">Cloudy</div>
+                        <div class="forecast-details">
+                            <span><i class="fa-solid fa-droplet"></i> 70%</span>
+                            <span><i class="fa-solid fa-wind"></i> 15 km/h</span>
+                        </div>
+                    </div>
+
+                    <!-- Day 4 -->
+                    <div class="forecast-card">
+                        <div class="forecast-day">Friday</div>
+                        <div class="forecast-date">Aug 22</div>
+                        <div class="forecast-icon"><i class="fa-solid fa-sun"></i></div>
+                        <div class="forecast-temp">34° / 27°</div>
+                        <div class="forecast-desc">Sunny</div>
+                        <div class="forecast-details">
+                            <span><i class="fa-solid fa-droplet"></i> 45%</span>
+                            <span><i class="fa-solid fa-wind"></i> 10 km/h</span>
+                        </div>
+                    </div>
+
+                    <!-- Day 5 -->
+                    <div class="forecast-card">
+                        <div class="forecast-day">Saturday</div>
+                        <div class="forecast-date">Aug 23</div>
+                        <div class="forecast-icon"><i class="fa-solid fa-sun"></i></div>
+                        <div class="forecast-temp">35° / 28°</div>
+                        <div class="forecast-desc">Sunny</div>
+                        <div class="forecast-details">
+                            <span><i class="fa-solid fa-droplet"></i> 40%</span>
+                            <span><i class="fa-solid fa-wind"></i> 8 km/h</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Crop Impact Summary -->
+            <section class="mt-2xl">
+                <h2 class="section-title" data-lang="crop_impact">Crop Impact Summary</h2>
+
+                <div class="crop-impact-grid">
+                    <div class="crop-impact-card positive">
+                        <div class="crop-impact-header">
+                            <div class="crop-impact-icon">🥜</div>
+                            <div class="crop-impact-name">Groundnut</div>
+                        </div>
+                        <div class="crop-impact-status positive" data-lang="impact_favorable">Favorable</div>
+                        <p class="crop-impact-desc" data-lang="groundnut_weather_desc">Current weather is good for vegetative growth. Rain will help with moisture.</p>
+                    </div>
+
+                    <div class="crop-impact-card moderate">
+                        <div class="crop-impact-header">
+                            <div class="crop-impact-icon">🌾</div>
+                            <div class="crop-impact-name">Cotton</div>
+                        </div>
+                        <div class="crop-impact-status moderate" data-lang="impact_moderate">Moderate</div>
+                        <p class="crop-impact-desc" data-lang="cotton_weather_desc">Watch for excessive moisture. Ensure proper drainage after rain.</p>
+                    </div>
+
+                    <div class="crop-impact-card caution">
+                        <div class="crop-impact-header">
+                            <div class="crop-impact-icon">🌽</div>
+                            <div class="crop-impact-name">Maize</div>
+                        </div>
+                        <div class="crop-impact-status caution" data-lang="impact_caution">Caution</div>
+                        <p class="crop-impact-desc" data-lang="maize_weather_desc">Heavy rain may cause waterlogging. Check field drainage before rain arrives.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                </div>
+                <div class="footer-copyright">© 2026 GREENgrid - Smart Agriculture Assistant</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/voice-assistant.js"></script>
+</body>
+</html>

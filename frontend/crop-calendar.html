@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Calendar - Smart Agriculture Assistant</title>
+    <meta name="description" content="Manage your crop lifecycle with daily tasks and schedules">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link active">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link active"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="nav_calendar">Crop Calendar</span>
+                </div>
+                <h1 class="page-title" data-lang="crop_calendar_title">📅 Crop Calendar</h1>
+                <p class="page-subtitle" data-lang="crop_calendar_subtitle">Manage your daily farming tasks and schedule</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Crop Hero Section -->
+            <section class="crop-hero" aria-labelledby="cropName">
+                <div class="crop-hero-bg"></div>
+                <div class="crop-hero-content">
+                    <div class="crop-hero-main">
+                        <div class="crop-identity">
+                            <div class="crop-icon-lg" aria-hidden="true">🥜</div>
+                            <div>
+                                <h2 id="cropName" class="crop-name" data-lang="crop_groundnut">Groundnut</h2>
+                                <div class="crop-stage-chip">
+                                    <span class="chip chip-success" data-lang="stage_vegetative">Vegetative Stage</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="crop-progress-ring" role="img" aria-label="Crop progress 31 percent">
+                            <svg class="progress-ring-svg" viewBox="0 0 120 120">
+                                <circle class="progress-ring-bg" cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="8" stroke-opacity="0.15"/>
+                                <circle class="progress-ring-fill" cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-dasharray="339" stroke-dashoffset="234" style="--progress: 31;"/>
+                            </svg>
+                            <div class="progress-ring-label">
+                                <span class="progress-day" data-lang="crop_calendar_day">Day 37 of 120</span>
+                                <span class="progress-pct">31%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="crop-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="daysRemaining">83</span>
+                            <span class="stat-label" data-lang="days_remaining">Days Remaining</span>
+                        </div>
+                        <div class="stat-divider" aria-hidden="true"></div>
+                        <div class="stat">
+                            <span class="stat-value" id="tasksRemaining">2</span>
+                            <span class="stat-label" data-lang="tasks_pending">Tasks Pending</span>
+                        </div>
+                        <div class="stat-divider" aria-hidden="true"></div>
+                        <div class="stat">
+                            <span class="stat-value" id="currentStageDay">37</span>
+                            <span class="stat-label" data-lang="stage_day">Day in Stage</span>
+                        </div>
+                    </div>
+                    <div class="crop-actions">
+                        <button class="btn btn-outline" id="addCropBtn">
+                            <i class="fa-solid fa-plus"></i>
+                            <span data-lang="add_new_crop">Add New Crop</span>
+                        </button>
+                        <button class="btn btn-primary" id="viewTimelineBtn">
+                            <i class="fa-solid fa-expand"></i>
+                            <span data-lang="view_full_timeline">View Full Timeline</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calendar Command Center - Smart Features Dashboard -->
+            <section class="calendar-command-center" aria-labelledby="commandCenterTitle">
+                <div class="command-center-header">
+                    <div>
+                        <span class="section-kicker" data-lang="smart_features">Smart Features</span>
+                        <h3 id="commandCenterTitle" class="section-title" data-lang="calendar_command_center">Command Center</h3>
+                    </div>
+                    <p class="command-center-subtitle" data-lang="calendar_command_subtitle">AI-powered insights to optimize your farming decisions</p>
+                </div>
+                <div class="feature-dashboard-grid" role="list" aria-label="Smart farming features">
+                    <!-- Smart Notifications Card -->
+                    <article class="smart-feature-card" role="listitem">
+                        <header class="feature-card-header">
+                            <div class="feature-card-icon notification-icon">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                            <div>
+                                <h4 class="feature-card-title" data-lang="smart_notifications">Smart Notifications</h4>
+                                <p class="feature-card-desc" data-lang="smart_notifications_desc">Get timely reminders for critical farming tasks</p>
+                            </div>
+                        </header>
+                        <div class="feature-card-body">
+                            <div class="notification-status" id="notificationStatus">
+                                <span class="status-indicator disabled" id="notificationIndicator"></span>
+                                <span class="status-text" id="notificationStatusText" data-lang="notifications_disabled">Notifications Disabled</span>
+                            </div>
+                            <div class="notification-timeline">
+                                <span class="timeline-label" data-lang="next_reminder">Next Reminder</span>
+                                <p class="timeline-text" id="nextNotificationText">—</p>
+                            </div>
+                            <button class="btn btn-primary btn-block mt-md" id="notificationToggleBtn">
+                                <i class="fa-solid fa-bell"></i> <span data-lang="enable_notifications">Enable Notifications</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Expense & Input Tracker Card -->
+                    <article class="smart-feature-card" role="listitem">
+                        <header class="feature-card-header">
+                            <div class="feature-card-icon expense-icon">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                            </div>
+                            <div>
+                                <h4 class="feature-card-title" data-lang="expense_input_tracker">Expense & Input Tracker</h4>
+                                <p class="feature-card-desc" data-lang="expense_tracker_desc">Track costs for seeds, fertilizers, labor and more</p>
+                            </div>
+                        </header>
+                        <div class="feature-card-body">
+                            <form class="expense-form" id="expenseForm" aria-label="Add expense">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" data-lang="input_name">Input Name</label>
+                                        <input type="text" class="form-input" id="expenseInputName" placeholder="e.g., DAP Fertilizer" required aria-label="Input name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" data-lang="input_type">Type</label>
+                                        <select class="form-input" id="expenseInputType" required aria-label="Input type">
+                                            <option value="" data-lang="select_type">Select Type</option>
+                                            <option value="seeds" data-lang="type_seeds">Seeds</option>
+                                            <option value="fertilizer" data-lang="type_fertilizer">Fertilizer</option>
+                                            <option value="pesticide" data-lang="type_pesticide">Pesticide</option>
+                                            <option value="labor" data-lang="type_labor">Labor</option>
+                                            <option value="irrigation" data-lang="type_irrigation">Irrigation</option>
+                                            <option value="equipment" data-lang="type_equipment">Equipment</option>
+                                            <option value="other" data-lang="type_other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="input_amount">Amount (₹)</label>
+                                    <input type="number" class="form-input" id="expenseInputAmount" placeholder="0" min="0" step="1" required aria-label="Amount">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block" id="addExpenseBtn">
+                                    <i class="fa-solid fa-plus"></i> <span data-lang="add_expense">Add Expense</span>
+                                </button>
+                            </form>
+                            <div class="expense-list" id="expenseList" role="list" aria-label="Expenses">
+                                <!-- Expenses rendered by JS -->
+                            </div>
+                            <div class="expense-summary">
+                                <div class="summary-row">
+                                    <span data-lang="total_expense">Total Expense</span>
+                                    <strong id="totalExpense">₹0</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span data-lang="cost_per_acre">Cost per Acre</span>
+                                    <strong id="costPerAcre">₹0</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Weather-Based Task Adjustments Card -->
+                    <article class="smart-feature-card" role="listitem">
+                        <header class="feature-card-header">
+                            <div class="feature-card-icon weather-icon">
+                                <i class="fa-solid fa-cloud-sun"></i>
+                            </div>
+                            <div>
+                                <h4 class="feature-card-title" data-lang="weather_task_adjust">Weather-Based Task Adjustments</h4>
+                                <p class="feature-card-desc" data-lang="weather_task_adjust_desc">Adapt your schedule based on weather conditions</p>
+                            </div>
+                        </header>
+                        <div class="feature-card-body">
+                            <div class="weather-adjustments-list" id="weatherAdjustmentsList" role="list" aria-label="Weather adjustments">
+                                <!-- Adjustments rendered by JS -->
+                            </div>
+                            <div class="weather-adjustment-status" id="weatherAdjustmentStatus" style="display: none;">
+                                <span class="status-indicator applied"></span>
+                                <span data-lang="adjustments_applied">Adjustments Applied</span>
+                            </div>
+                            <button class="btn btn-primary btn-block mt-md" id="applyWeatherAdjustmentsBtn">
+                                <i class="fa-solid fa-check"></i> <span data-lang="apply_adjustments">Apply Adjustments</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Yield Predictor Card -->
+                    <article class="smart-feature-card" role="listitem">
+                        <header class="feature-card-header">
+                            <div class="feature-card-icon yield-icon">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h4 class="feature-card-title" data-lang="yield_predictor">Yield Predictor</h4>
+                                <p class="feature-card-desc" data-lang="yield_predictor_desc">Estimate your harvest based on current conditions</p>
+                            </div>
+                        </header>
+                        <div class="feature-card-body">
+                            <div class="yield-predictor-grid">
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="crop_area_acres">Crop Area (Acres)</label>
+                                    <input type="number" class="form-input" id="yieldAreaInput" min="0.1" step="0.1" value="2" aria-label="Crop area in acres">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="plant_health">Plant Health (%)</label>
+                                    <input type="range" class="form-range" id="yieldHealthInput" min="0" max="100" value="82" aria-label="Plant health percentage">
+                                    <span class="range-value" id="yieldHealthValue">82%</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-lang="plants_per_acre">Plants per Acre</label>
+                                    <input type="number" class="form-input" id="yieldPlantsInput" min="1000" step="1000" value="95000" aria-label="Plants per acre">
+                                </div>
+                            </div>
+                            <div class="yield-result">
+                                <div class="yield-meter">
+                                    <svg class="yield-meter-svg" viewBox="0 0 120 120" role="img" aria-label="Yield prediction meter">
+                                        <circle class="yield-meter-bg" cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="8" stroke-opacity="0.15"/>
+                                        <circle class="yield-meter-fill" cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-dasharray="339" stroke-dashoffset="339" style="--progress: 0;"/>
+                                    </svg>
+                                    <div class="yield-meter-label">
+                                        <span class="yield-value" id="predictedYield">0 Qtl</span>
+                                        <span class="yield-unit" data-lang="quintals">Quintals</span>
+                                    </div>
+                                </div>
+                                <div class="yield-details">
+                                    <div class="yield-detail">
+                                        <span data-lang="predicted_revenue">Predicted Revenue</span>
+                                        <strong id="predictedRevenue">₹0</strong>
+                                    </div>
+                                    <div class="yield-detail">
+                                        <span data-lang="confidence">Confidence</span>
+                                        <div class="confidence-bar">
+                                            <div class="confidence-fill" id="yieldConfidence" style="width: 0%"></div>
+                                        </div>
+                                        <span class="confidence-text" id="yieldConfidenceText">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Crop Growth Journey -->
+            <section class="growth-journey" aria-labelledby="growthJourneyTitle">
+                <div class="journey-header">
+                    <div>
+                        <span class="section-kicker" data-lang="crop_growth_journey">Crop Growth Journey</span>
+                        <h3 id="growthJourneyTitle" class="section-title" data-lang="growth_stages">Growth Stages</h3>
+                    </div>
+                    <div class="journey-progress-summary" id="journeyProgressSummary">
+                        <span class="journey-progress-label" data-lang="growth_progress">Growth Progress</span>
+                        <div class="journey-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Crop growth progress">
+                            <div class="journey-progress-fill" id="journeyProgressFill" style="width: 0%;"></div>
+                        </div>
+                        <span class="journey-progress-text" id="journeyProgressText">Day 37 of 120 — 31%</span>
+                    </div>
+                </div>
+
+                <div class="journey-track" role="list" aria-label="Crop growth stages">
+                    <div class="journey-track-line" aria-hidden="true">
+                        <div class="journey-track-fill" id="journeyTrackFill" style="width: 0%;"></div>
+                    </div>
+                    <ol class="journey-steps" id="journeySteps" role="list">
+                        <!-- Stages rendered dynamically by JS -->
+                    </ol>
+                </div>
+
+                <!-- Stage Info Panel -->
+                <div class="journey-info-panel" id="journeyInfoPanel" aria-live="polite" aria-label="Stage information">
+                    <div class="info-panel-header">
+                        <h4 class="info-panel-title" id="infoPanelTitle" data-lang="stage_details">Stage Details</h4>
+                        <span class="info-panel-close" onclick="closeInfoPanel()" aria-label="Close panel"><i class="fa-solid fa-xmark"></i></span>
+                    </div>
+                    <div class="info-panel-body" id="infoPanelBody">
+                        <!-- Content rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Current Week Strip -->
+            <section class="week-strip" aria-labelledby="weekStripTitle">
+                <h3 id="weekStripTitle" class="section-title" data-lang="this_week">This Week (Days 35–41)</h3>
+                <div class="week-days" id="weekDays" role="list" aria-label="Days of current week">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <div class="two-column mt-2xl">
+                <!-- Today's Tasks List -->
+                <section class="today-tasks-panel" aria-labelledby="todayTasksTitle">
+                    <div class="tasks-header">
+                        <div>
+                            <span class="section-kicker" data-lang="daily_schedule">Daily Schedule</span>
+                            <h3 id="todayTasksTitle" class="section-title">Today's Tasks</h3>
+                        </div>
+                        <div class="task-date-header">
+                            <span class="task-date" id="currentDate">August 19, 2026</span>
+                            <span class="badge badge-warning" id="tasksRemainingBadge">0 Tasks Remaining</span>
+                        </div>
+                    </div>
+
+                    <div class="task-list" id="taskList" role="list" aria-label="Today's farming tasks">
+                        <!-- Tasks rendered dynamically by JS -->
+                    </div>
+
+                    <!-- Empty state -->
+                    <div class="task-empty-state" id="taskEmptyState" style="display: none;" aria-live="polite">
+                        <div class="empty-state-icon"><i class="fa-solid fa-seedling"></i></div>
+                        <p class="empty-state-title" data-lang="no_tasks_today">No tasks scheduled for today</p>
+                        <p class="empty-state-desc" data-lang="no_tasks_today_desc">Your crop is on track. Check back tomorrow for new tasks.</p>
+                    </div>
+                </section>
+
+                <!-- Sidebar: Weather Impact & Expert Tip -->
+                <div class="calendar-sidebar">
+                    <section class="weather-impact-card" aria-labelledby="weatherImpactTitle">
+                        <header class="card-header">
+                            <h3 id="weatherImpactTitle" class="section-title" data-lang="weather_impact">Weather Impact</h3>
+                        </header>
+                        <div class="alert-card warning">
+                            <div class="alert-card-icon">
+                                <i class="fa-solid fa-cloud-showers-heavy" aria-hidden="true"></i>
+                            </div>
+                            <div class="alert-card-content">
+                                <div class="alert-card-title" data-lang="alert_rain_expected">Heavy Rain Expected Tomorrow</div>
+                                <div class="alert-card-message" data-lang="alert_rain_desc">Delay any fertilizer application until after the rain passes to prevent runoff.</div>
+                                <a href="weather.html" class="alert-card-action" data-lang="view_weather">
+                                    View Full Forecast <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="weather-quick" aria-label="Quick weather summary">
+                            <div class="weather-quick-item">
+                                <i class="fa-solid fa-droplet" aria-hidden="true"></i>
+                                <span>Humidity <strong>78%</strong></span>
+                            </div>
+                            <div class="weather-quick-item">
+                                <i class="fa-solid fa-wind" aria-hidden="true"></i>
+                                <span>Wind <strong>12 km/h</strong></span>
+                            </div>
+                            <div class="weather-quick-item">
+                                <i class="fa-solid fa-cloud-rain" aria-hidden="true"></i>
+                                <span>Rain Chance <strong>85%</strong></span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="expert-tip-card" aria-labelledby="expertTipTitle">
+                        <header class="card-header">
+                            <h3 id="expertTipTitle" class="section-title" data-lang="expert_tip">Expert Tip</h3>
+                        </header>
+                        <div class="card expert-card">
+                            <div class="card-body">
+                                <div class="expert-card-header">
+                                    <i class="fa-solid fa-lightbulb text-accent" aria-hidden="true"></i>
+                                    <h4 class="font-semibold" data-lang="vegetative_stage_tip_title">Vegetative Stage Care</h4>
+                                </div>
+                                <p class="text-sm text-secondary m-0" data-lang="vegetative_stage_tip_desc">
+                                    During days 30-45, groundnut plants rapidly produce branches and leaves. This is a critical period for moisture. Ensure soil doesn't dry out completely, but avoid waterlogging which promotes fungal diseases.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="quick-actions" aria-labelledby="quickActionsTitle">
+                        <h3 id="quickActionsTitle" class="section-title" data-lang="quick_actions">Quick Actions</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline btn-block" onclick="window.location.href='disease-detection.html'">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span data-lang="check_disease">Check for Disease</span>
+                            </button>
+                            <button class="btn btn-outline btn-block" onclick="window.location.href='weather.html'">
+                                <i class="fa-solid fa-cloud-sun"></i>
+                                <span data-lang="view_weather">View Weather</span>
+                            </button>
+                            <button class="btn btn-primary btn-block" id="markAllDoneBtn">
+                                <i class="fa-solid fa-check-double"></i>
+                                <span data-lang="mark_all_done">Mark All Done</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                </div>
+                <div class="footer-copyright">© 2026 GREENgrid - Smart Agriculture Assistant</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/crop-calendar.js"></script>
+    <script src="js/voice-assistant.js"></script>
+</body>
+</html>

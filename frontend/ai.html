@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Farming Command Center - Smart Agriculture Assistant</title>
+    <meta name="description" content="Your comprehensive AI-powered farming command center with daily briefings, smart insights, and expert chat">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+                <a href="ai.html" class="nav-link active">
+                    <i class="fa-solid fa-robot"></i>
+                    <span data-lang="nav_ai">AI Advisor</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link active"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="nav_ai">AI Farming Command Center</span>
+                </div>
+                <h1 class="page-title" data-lang="ai_cc_title">AI Farming Command Center</h1>
+                <p class="page-subtitle" data-lang="ai_cc_subtitle">Your intelligent farming assistant — daily briefings, smart insights, and expert chat</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="ai-cc-layout">
+                <!-- LEFT COLUMN: Daily Briefing + Smart Insight Cards + AI Chat -->
+                <div class="ai-cc-main">
+                    <!-- DAILY BRIEFING -->
+                    <section class="ai-cc-card daily-briefing-card" aria-labelledby="dailyBriefingTitle">
+                        <header class="ai-cc-card-header">
+                            <div class="ai-cc-card-icon briefing-icon">
+                                <i class="fa-solid fa-newspaper"></i>
+                            </div>
+                            <div>
+                                <h2 id="dailyBriefingTitle" class="ai-cc-card-title" data-lang="ai_daily_briefing">Daily Briefing</h2>
+                                <p class="ai-cc-card-subtitle" data-lang="ai_briefing_subtitle">Your personalized farming snapshot for today</p>
+                            </div>
+                            <button class="icon-btn" id="refreshBriefingBtn" aria-label="Refresh briefing" data-tooltip="Refresh">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </header>
+                        <div class="ai-cc-card-body">
+                            <div class="briefing-grid" id="dailyBriefingGrid">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SMART INSIGHT CARDS -->
+                    <section class="ai-cc-card insights-card" aria-labelledby="insightsTitle">
+                        <header class="ai-cc-card-header">
+                            <div class="ai-cc-card-icon insights-icon">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h2 id="insightsTitle" class="ai-cc-card-title" data-lang="ai_smart_insights">Smart Insights</h2>
+                                <p class="ai-cc-card-subtitle" data-lang="ai_insights_subtitle">AI-generated recommendations for your farm</p>
+                            </div>
+                        </header>
+                        <div class="ai-cc-card-body">
+                            <div class="insights-grid" id="insightsGrid">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- AI CHAT INTERFACE -->
+                    <section class="ai-cc-card chat-card" aria-labelledby="chatTitle">
+                        <header class="ai-cc-card-header">
+                            <div class="ai-cc-card-icon chat-icon">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div>
+                                <h2 id="chatTitle" class="ai-cc-card-title" data-lang="ai_chat_title">AI Advisor Chat</h2>
+                                <p class="ai-cc-card-subtitle" data-lang="ai_chat_subtitle">Ask questions, get expert farming advice instantly</p>
+                            </div>
+                            <div class="chat-header-actions">
+                                <button class="icon-btn" id="voiceInputBtn" aria-label="Voice input" data-tooltip="Use voice">
+                                    <i class="fa-solid fa-microphone"></i>
+                                </button>
+                                <button class="icon-btn" id="clearChatBtn" aria-label="Clear chat" data-tooltip="Clear conversation">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </header>
+                        <div class="ai-cc-card-body chat-body">
+                            <!-- Messages Area -->
+                            <section class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Conversation">
+                                <!-- Messages populated by JS -->
+                                <div class="message ai-message welcome-message">
+                                    <div class="message-avatar">
+                                        <i class="fa-solid fa-robot"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-bubble">
+                                            <p data-lang="ai_welcome">Hello! I'm your AI agriculture advisor. Ask me anything about:</p>
+                                            <ul class="topic-list">
+                                                <li><i class="fa-solid fa-seedling"></i> <span data-lang="topic_crops">Crop selection & cultivation</span></li>
+                                                <li><i class="fa-solid fa-bug"></i> <span data-lang="topic_pests">Pest & disease management</span></li>
+                                                <li><i class="fa-solid fa-cloud-sun"></i> <span data-lang="topic_weather">Weather & irrigation planning</span></li>
+                                                <li><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="topic_market">Market prices & selling strategy</span></li>
+                                                <li><i class="fa-solid fa-flask"></i> <span data-lang="topic_soil">Soil health & fertilizers</span></li>
+                                                <li><i class="fa-solid fa-tractor"></i> <span data-lang="topic_equipment">Farm equipment & techniques</span></li>
+                                            </ul>
+                                            <p class="welcome-hint" data-lang="ai_hint">Type your question below or tap the microphone to speak.</p>
+                                        </div>
+                                        <span class="message-time" id="welcomeTime"></span>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Quick Suggestions -->
+                            <section class="quick-suggestions" id="quickSuggestions" aria-label="Suggested questions">
+                                <div class="suggestion-chips" id="suggestionChips">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </section>
+
+                            <!-- Category Pills -->
+                            <section class="chat-categories" aria-labelledby="chatCategoriesTitle">
+                                <div class="category-pills" id="categoryPills">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </section>
+
+                            <!-- Input Area -->
+                            <footer class="chat-input-area">
+                                <div class="input-wrapper">
+                                    <button class="icon-btn attach-btn" id="attachBtn" aria-label="Attach image" data-tooltip="Upload photo">
+                                        <i class="fa-solid fa-paperclip"></i>
+                                    </button>
+                                    <textarea
+                                        id="chatInput"
+                                        class="chat-input"
+                                        placeholder="Ask your farming question..."
+                                        data-lang-placeholder="ai_placeholder"
+                                        rows="1"
+                                        aria-label="Your question"
+                                    ></textarea>
+                                    <button class="icon-btn send-btn" id="sendBtn" aria-label="Send message" disabled>
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                                <div class="input-hints">
+                                    <span class="hint" data-lang="ai_hint_text">Press Enter to send • Shift+Enter for new line</span>
+                                    <span class="hint" data-lang="ai_voice_hint">Or tap 🎤 for voice input</span>
+                                </div>
+                            </footer>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- RIGHT COLUMN: Priority Actions + Insight Feed -->
+                <aside class="ai-cc-sidebar">
+                    <!-- PRIORITY ACTIONS -->
+                    <section class="ai-cc-card priority-actions-card" aria-labelledby="priorityTitle">
+                        <header class="ai-cc-card-header">
+                            <div class="ai-cc-card-icon priority-icon">
+                                <i class="fa-solid fa-flag-checkered"></i>
+                            </div>
+                            <div>
+                                <h2 id="priorityTitle" class="ai-cc-card-title" data-lang="ai_priority_actions">Priority Actions</h2>
+                                <p class="ai-cc-card-subtitle" data-lang="ai_priority_subtitle">Critical tasks requiring attention today</p>
+                            </div>
+                        </header>
+                        <div class="ai-cc-card-body">
+                            <div class="priority-list" id="priorityActionsList">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- INSIGHT FEED -->
+                    <section class="ai-cc-card insight-feed-card" aria-labelledby="feedTitle">
+                        <header class="ai-cc-card-header">
+                            <div class="ai-cc-card-icon feed-icon">
+                                <i class="fa-solid fa-rss"></i>
+                            </div>
+                            <div>
+                                <h2 id="feedTitle" class="ai-cc-card-title" data-lang="ai_insight_feed">Insight Feed</h2>
+                                <p class="ai-cc-card-subtitle" data-lang="ai_feed_subtitle">Live updates & farming intelligence</p>
+                            </div>
+                        </header>
+                        <div class="ai-cc-card-body">
+                            <div class="insight-feed" id="insightFeedList">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- FARM CONTEXT (compact) -->
+                    <section class="ai-cc-card farm-context-card" aria-labelledby="contextTitle">
+                        <header class="ai-cc-card-header">
+                            <div class="ai-cc-card-icon context-icon">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h2 id="contextTitle" class="ai-cc-card-title" data-lang="ai_context">Farm Context</h2>
+                                <p class="ai-cc-card-subtitle" data-lang="ai_context_subtitle">Current active crop & conditions</p>
+                            </div>
+                        </header>
+                        <div class="ai-cc-card-body">
+                            <div class="context-info" id="farmContext">
+                                <div class="context-item">
+                                    <span class="context-label" data-lang="active_crop">Active Crop</span>
+                                    <span class="context-value" id="contextCrop">Groundnut</span>
+                                </div>
+                                <div class="context-item">
+                                    <span class="context-label" data-lang="day_number">Growth Stage</span>
+                                    <span class="context-value" id="contextStage">Vegetative (Day 37)</span>
+                                </div>
+                                <div class="context-item">
+                                    <span class="context-label" data-lang="location">Location</span>
+                                    <span class="context-value" id="contextLocation">Gujarat, India</span>
+                                </div>
+                                <div class="context-item">
+                                    <span class="context-label" data-lang="soil_type">Soil Type</span>
+                                    <span class="context-value" id="contextSoil">Loamy</span>
+                                </div>
+                                <button class="btn btn-outline btn-block btn-sm mt-md" id="updateContextBtn" data-lang="ai_update_context">Update Context</button>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                </div>
+                <div class="footer-copyright">© 2026 GREENgrid - Smart Agriculture Assistant</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/ai-advisor.js"></script>
+    <script src="js/voice-assistant.js"></script>
+</body>
+</html>

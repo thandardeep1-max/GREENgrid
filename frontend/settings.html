@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Smart Agriculture Assistant</title>
+    <meta name="description" content="Manage your GREENgrid settings and preferences">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link active"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="settings_title">Settings</span>
+                </div>
+                <h1 class="page-title" data-lang="settings_title">⚙️ Settings</h1>
+                <p class="page-subtitle" data-lang="settings_subtitle">Manage your preferences and farm information</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="settings-container">
+                <!-- Settings Sidebar Navigation -->
+                <aside class="settings-sidebar">
+                    <nav class="settings-nav">
+                        <button class="settings-nav-item active" data-tab="theme-language">
+                            <i class="fa-solid fa-palette"></i>
+                            <span data-lang="settings_theme_language">Theme & Language</span>
+                        </button>
+                        <button class="settings-nav-item" data-tab="farm-profile">
+                            <i class="fa-solid fa-tractor"></i>
+                            <span data-lang="settings_farm_profile">Farm Profile</span>
+                        </button>
+                        <button class="settings-nav-item" data-tab="weather-alerts">
+                            <i class="fa-solid fa-cloud-bolt"></i>
+                            <span data-lang="settings_weather_alerts">Weather Alerts</span>
+                        </button>
+                        <button class="settings-nav-item" data-tab="app-data">
+                            <i class="fa-solid fa-database"></i>
+                            <span data-lang="settings_app_data">App Data</span>
+                        </button>
+                        <button class="settings-nav-item" data-tab="farmer-details">
+                            <i class="fa-solid fa-user"></i>
+                            <span data-lang="settings_farmer_details">Farmer Details</span>
+                        </button>
+                    </nav>
+                </aside>
+
+                <!-- Settings Content Panels -->
+                <div class="settings-content">
+                    <!-- Theme & Language Panel -->
+                    <div class="settings-panel active" id="theme-language-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title" data-lang="settings_theme_language">Theme & Language</h2>
+                            </div>
+                            <div class="card-body">
+                                <!-- Theme Section -->
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_theme">Theme</h3>
+                                    <p class="settings-section-desc" data-lang="settings_theme_desc">Choose how GREENgrid looks on your device</p>
+
+                                    <div class="theme-options-grid">
+                                        <button class="theme-card active" data-theme="light" role="radio" aria-checked="true">
+                                            <div class="theme-card-preview light"></div>
+                                            <div class="theme-card-info">
+                                                <h4 data-lang="theme_light">Light</h4>
+                                                <p data-lang="theme_light_desc">Bright and clean interface</p>
+                                            </div>
+                                            <i class="fa-solid fa-check theme-card-check"></i>
+                                        </button>
+                                        <button class="theme-card" data-theme="dark" role="radio" aria-checked="false">
+                                            <div class="theme-card-preview dark"></div>
+                                            <div class="theme-card-info">
+                                                <h4 data-lang="theme_dark">Dark</h4>
+                                                <p data-lang="theme_dark_desc">Easy on the eyes in low light</p>
+                                            </div>
+                                            <i class="fa-solid fa-check theme-card-check"></i>
+                                        </button>
+                                        <button class="theme-card" data-theme="system" role="radio" aria-checked="false">
+                                            <div class="theme-card-preview system"></div>
+                                            <div class="theme-card-info">
+                                                <h4 data-lang="theme_system">System</h4>
+                                                <p data-lang="theme_system_desc">Matches your device settings</p>
+                                            </div>
+                                            <i class="fa-solid fa-check theme-card-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <!-- Language Section -->
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_language">Language</h3>
+                                    <p class="settings-section-desc" data-lang="settings_language_desc">Select your preferred language</p>
+
+                                    <div class="language-options">
+                                        <button class="language-card active" data-lang-code="en">
+                                            <div class="language-flag">🇬🇧</div>
+                                            <div class="language-info">
+                                                <h4>English</h4>
+                                                <p data-lang="settings_english">English (International)</p>
+                                            </div>
+                                            <i class="fa-solid fa-check language-check"></i>
+                                        </button>
+                                        <button class="language-card" data-lang-code="hi">
+                                            <div class="language-flag">🇮🇳</div>
+                                            <div class="language-info">
+                                                <h4>हिंदी</h4>
+                                                <p data-lang="settings_hindi">हिंदी (भारत)</p>
+                                            </div>
+                                            <i class="fa-solid fa-check language-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Farm Profile Panel -->
+                    <div class="settings-panel" id="farm-profile-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title" data-lang="settings_farm_profile">Farm Profile</h2>
+                            </div>
+                            <div class="card-body">
+                                <form id="farmProfileForm">
+                                    <div class="settings-section">
+                                        <h3 class="settings-section-title" data-lang="settings_basic_info">Basic Information</h3>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="farmName" data-lang="farm_name">Farm Name</label>
+                                                <input type="text" class="input" id="farmName" placeholder="e.g., Green Fields Farm">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="farmSize" data-lang="farm_size">Farm Size (Acres)</label>
+                                                <input type="number" class="input" id="farmSize" step="0.5" min="0" placeholder="e.g., 10">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="farmState" data-lang="state">State</label>
+                                                <select class="select" id="farmState">
+                                                    <option value="" data-lang="select_state">Select State</option>
+                                                    <option value="andhra">Andhra Pradesh</option>
+                                                    <option value="arunachal">Arunachal Pradesh</option>
+                                                    <option value="assam">Assam</option>
+                                                    <option value="bihar">Bihar</option>
+                                                    <option value="chhattisgarh">Chhattisgarh</option>
+                                                    <option value="goa">Goa</option>
+                                                    <option value="gujarat">Gujarat</option>
+                                                    <option value="haryana">Haryana</option>
+                                                    <option value="himachal">Himachal Pradesh</option>
+                                                    <option value="jharkhand">Jharkhand</option>
+                                                    <option value="karnataka">Karnataka</option>
+                                                    <option value="kerala">Kerala</option>
+                                                    <option value="madhya">Madhya Pradesh</option>
+                                                    <option value="maharashtra">Maharashtra</option>
+                                                    <option value="manipur">Manipur</option>
+                                                    <option value="meghalaya">Meghalaya</option>
+                                                    <option value="mizoram">Mizoram</option>
+                                                    <option value="nagaland">Nagaland</option>
+                                                    <option value="odisha">Odisha</option>
+                                                    <option value="punjab">Punjab</option>
+                                                    <option value="rajasthan">Rajasthan</option>
+                                                    <option value="sikkim">Sikkim</option>
+                                                    <option value="tamil">Tamil Nadu</option>
+                                                    <option value="telangana">Telangana</option>
+                                                    <option value="tripura">Tripura</option>
+                                                    <option value="uttar">Uttar Pradesh</option>
+                                                    <option value="uttarakhand">Uttarakhand</option>
+                                                    <option value="west_bengal">West Bengal</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="farmDistrict" data-lang="district">District</label>
+                                                <input type="text" class="input" id="farmDistrict" placeholder="e.g., Ahmedabad">
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label" for="farmAddress" data-lang="address">Address</label>
+                                            <textarea class="textarea" id="farmAddress" rows="2" placeholder="Village, Taluka, District, State"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <div class="settings-section">
+                                        <h3 class="settings-section-title" data-lang="settings_soil_water">Soil & Water Details</h3>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="soilType" data-lang="soil_type">Soil Type</label>
+                                                <select class="select" id="soilType">
+                                                    <option value="" data-lang="select_soil">Select Soil Type</option>
+                                                    <option value="loamy">Loamy</option>
+                                                    <option value="clay">Clay</option>
+                                                    <option value="sandy">Sandy</option>
+                                                    <option value="silty">Silty</option>
+                                                    <option value="peaty">Peaty</option>
+                                                    <option value="chalky">Chalky</option>
+                                                    <option value="black">Black Cotton Soil</option>
+                                                    <option value="red">Red Soil</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="soilPh" data-lang="soil_ph">Soil pH</label>
+                                                <input type="number" class="input" id="soilPh" step="0.1" min="0" max="14" placeholder="e.g., 6.5">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="waterSource" data-lang="water_source">Water Source</label>
+                                                <select class="select" id="waterSource">
+                                                    <option value="" data-lang="select_water">Select Water Source</option>
+                                                    <option value="borewell">Borewell / Tube Well</option>
+                                                    <option value="canal">Canal</option>
+                                                    <option value="river">River / Stream</option>
+                                                    <option value="pond">Pond / Tank</option>
+                                                    <option value="rainwater">Rainwater Harvesting</option>
+                                                    <option value="municipal">Municipal Supply</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="waterAvailability" data-lang="water_avail">Water Availability</label>
+                                                <select class="select" id="waterAvailability">
+                                                    <option value="" data-lang="select_avail">Select Availability</option>
+                                                    <option value="abundant">Abundant</option>
+                                                    <option value="adequate">Adequate</option>
+                                                    <option value="limited">Limited</option>
+                                                    <option value="scarce">Scarce</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label" for="irrigationType" data-lang="irrigation_type">Irrigation Type</label>
+                                            <select class="select" id="irrigationType">
+                                                <option value="" data-lang="select_irrigation">Select Irrigation Type</option>
+                                                <option value="drip">Drip Irrigation</option>
+                                                <option value="sprinkler">Sprinkler</option>
+                                                <option value="flood">Flood / Surface</option>
+                                                <option value="subsurface">Subsurface Drip</option>
+                                                <option value="manual">Manual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <div class="settings-section">
+                                        <h3 class="settings-section-title" data-lang="settings_crops">Current Crops</h3>
+
+                                        <div id="currentCropsList" class="crop-list">
+                                            <!-- Crops added dynamically -->
+                                        </div>
+
+                                        <button type="button" class="btn btn-outline btn-sm" id="addCropBtn">
+                                            <i class="fa-solid fa-plus"></i>
+                                            <span data-lang="add_crop">Add Crop</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa-solid fa-save"></i>
+                                            <span data-lang="save_changes">Save Changes</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="resetFarmBtn" data-lang="reset">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weather Alerts Panel -->
+                    <div class="settings-panel" id="weather-alerts-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title" data-lang="settings_weather_alerts">Weather Alerts</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_notification_prefs">Notification Preferences</h3>
+                                    <p class="settings-section-desc" data-lang="settings_notification_prefs_desc">Choose which weather alerts you want to receive</p>
+
+                                    <div class="toggle-list">
+                                        <label class="toggle-item">
+                                            <div class="toggle-info">
+                                                <i class="fa-solid fa-cloud-showers-heavy toggle-icon warning"></i>
+                                                <div>
+                                                    <h4 data-lang="alert_heavy_rain">Heavy Rain Alerts</h4>
+                                                    <p data-lang="alert_heavy_rain_desc">Get notified when heavy rainfall is expected</p>
+                                                </div>
+                                            </div>
+                                            <input type="checkbox" class="toggle-input" id="alertHeavyRain" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+
+                                        <label class="toggle-item">
+                                            <div class="toggle-info">
+                                                <i class="fa-solid fa-temperature-high toggle-icon info"></i>
+                                                <div>
+                                                    <h4 data-lang="alert_high_temp">High Temperature Alerts</h4>
+                                                    <p data-lang="alert_high_temp_desc">Get notified when temperature exceeds safe limits</p>
+                                                </div>
+                                            </div>
+                                            <input type="checkbox" class="toggle-input" id="alertHighTemp" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+
+                                        <label class="toggle-item">
+                                            <div class="toggle-info">
+                                                <i class="fa-solid fa-wind toggle-icon info"></i>
+                                                <div>
+                                                    <h4 data-lang="alert_wind">Strong Wind Alerts</h4>
+                                                    <p data-lang="alert_wind_desc">Get notified when wind speeds are high</p>
+                                                </div>
+                                            </div>
+                                            <input type="checkbox" class="toggle-input" id="alertHighWind" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+
+                                        <label class="toggle-item">
+                                            <div class="toggle-info">
+                                                <i class="fa-solid fa-droplet toggle-icon success"></i>
+                                                <div>
+                                                    <h4 data-lang="alert_humidity">High Humidity Alerts</h4>
+                                                    <p data-lang="alert_humidity_desc">Get notified when humidity levels may cause fungal issues</p>
+                                                </div>
+                                            </div>
+                                            <input type="checkbox" class="toggle-input" id="alertHighHumidity">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+
+                                        <label class="toggle-item">
+                                            <div class="toggle-info">
+                                                <i class="fa-solid fa-sun toggle-icon accent"></i>
+                                                <div>
+                                                    <h4 data-lang="alert_uv">High UV Index Alerts</h4>
+                                                    <p data-lang="alert_uv_desc">Get notified when UV index is dangerous for crops</p>
+                                                </div>
+                                            </div>
+                                            <input type="checkbox" class="toggle-input" id="alertHighUV">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+
+                                        <label class="toggle-item">
+                                            <div class="toggle-info">
+                                                <i class="fa-solid fa-cloud-bolt toggle-icon error"></i>
+                                                <div>
+                                                    <h4 data-lang="alert_storm">Storm / Cyclone Alerts</h4>
+                                                    <p data-lang="alert_storm_desc">Get notified of severe weather warnings</p>
+                                                </div>
+                                            </div>
+                                            <input type="checkbox" class="toggle-input" id="alertStorm" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_alert_timing">Alert Timing</h3>
+
+                                    <div class="form-row">
+                                        <div class="field">
+                                            <label class="label" for="alertLeadTime" data-lang="settings_lead_time">Advance Notice</label>
+                                            <select class="select" id="alertLeadTime">
+                                                <option value="1" data-lang="settings_1_hour">1 hour before</option>
+                                                <option value="6" data-lang="settings_6_hours">6 hours before</option>
+                                                <option value="12" selected data-lang="settings_12_hours">12 hours before</option>
+                                                <option value="24" data-lang="settings_24_hours">24 hours before</option>
+                                                <option value="48" data-lang="settings_48_hours">48 hours before</option>
+                                            </select>
+                                        </div>
+                                        <div class="field">
+                                            <label class="label" for="quietHoursStart" data-lang="settings_quiet_start">Quiet Hours Start</label>
+                                            <input type="time" class="input" id="quietHoursStart" value="22:00">
+                                        </div>
+                                        <div class="field">
+                                            <label class="label" for="quietHoursEnd" data-lang="settings_quiet_end">Quiet Hours End</label>
+                                            <input type="time" class="input" id="quietHoursEnd" value="06:00">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_crop_specific">Crop-Specific Alerts</h3>
+                                    <p class="settings-section-desc" data-lang="settings_crop_specific_desc">Enable tailored alerts for your specific crops (configured in Farm Profile)</p>
+
+                                    <label class="toggle-item">
+                                        <div class="toggle-info">
+                                            <i class="fa-solid fa-seedling toggle-icon success"></i>
+                                            <div>
+                                                <h4 data-lang="settings_crop_alerts">Crop-Specific Alerts</h4>
+                                                <p data-lang="settings_crop_alerts_desc">Receive alerts based on your crops' growth stages and needs</p>
+                                            </div>
+                                        </div>
+                                        <input type="checkbox" class="toggle-input" id="alertCropSpecific" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-primary" id="saveWeatherAlertsBtn">
+                                        <i class="fa-solid fa-save"></i>
+                                        <span data-lang="save_changes">Save Changes</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App Data Panel -->
+                    <div class="settings-panel" id="app-data-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title" data-lang="settings_app_data">App Data</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_storage">Storage Usage</h3>
+
+                                    <div class="storage-info">
+                                        <div class="storage-bar">
+                                            <div class="storage-bar-fill" id="storageBar" style="width: 15%;"></div>
+                                        </div>
+                                        <div class="storage-details">
+                                            <span id="storageUsed">2.4 MB</span>
+                                            <span data-lang="settings_storage_of">of</span>
+                                            <span id="storageTotal">15 MB</span>
+                                            <span id="storagePercent">(16% used)</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="storage-breakdown">
+                                        <div class="storage-item">
+                                            <span class="storage-item-label" data-lang="settings_offline_data">Offline Data</span>
+                                            <span class="storage-item-value">1.2 MB</span>
+                                        </div>
+                                        <div class="storage-item">
+                                            <span class="storage-item-label" data-lang="settings_cached_images">Cached Images</span>
+                                            <span class="storage-item-value">580 KB</span>
+                                        </div>
+                                        <div class="storage-item">
+                                            <span class="storage-item-label" data-lang="settings_user_data">User Data</span>
+                                            <span class="storage-item-value">640 KB</span>
+                                        </div>
+                                        <div class="storage-item">
+                                            <span class="storage-item-label" data-lang="settings_app_cache">App Cache</span>
+                                            <span class="storage-item-value">45 KB</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_data_management">Data Management</h3>
+
+                                    <div class="action-buttons">
+                                        <button type="button" class="btn btn-outline" id="clearCacheBtn">
+                                            <i class="fa-solid fa-broom"></i>
+                                            <div>
+                                                <strong data-lang="settings_clear_cache">Clear Cache</strong>
+                                                <small data-lang="settings_clear_cache_desc">Remove temporary files and cached images</small>
+                                            </div>
+                                        </button>
+
+                                        <button type="button" class="btn btn-outline" id="clearOfflineBtn">
+                                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                                            <div>
+                                                <strong data-lang="settings_clear_offline">Clear Offline Data</strong>
+                                                <small data-lang="settings_clear_offline_desc">Remove downloaded data for offline use</small>
+                                            </div>
+                                        </button>
+
+                                        <button type="button" class="btn btn-outline" id="exportDataBtn">
+                                            <i class="fa-solid fa-download"></i>
+                                            <div>
+                                                <strong data-lang="settings_export_data">Export My Data</strong>
+                                                <small data-lang="settings_export_data_desc">Download all your data as JSON</small>
+                                            </div>
+                                        </button>
+
+                                        <button type="button" class="btn btn-error" id="deleteAccountBtn">
+                                            <i class="fa-solid fa-trash"></i>
+                                            <div>
+                                                <strong data-lang="settings_delete_account">Delete Account</strong>
+                                                <small data-lang="settings_delete_account_desc">Permanently delete all your data</small>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-section">
+                                    <h3 class="settings-section-title" data-lang="settings_sync">Sync & Backup</h3>
+
+                                    <label class="toggle-item">
+                                        <div class="toggle-info">
+                                            <i class="fa-solid fa-cloud toggle-icon info"></i>
+                                            <div>
+                                                <h4 data-lang="settings_auto_sync">Auto Sync</h4>
+                                                <p data-lang="settings_auto_sync_desc">Automatically sync data when online</p>
+                                            </div>
+                                        </div>
+                                        <input type="checkbox" class="toggle-input" id="autoSync" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+
+                                    <label class="toggle-item">
+                                        <div class="toggle-info">
+                                            <i class="fa-solid fa-clock-rotate-left toggle-icon accent"></i>
+                                            <div>
+                                                <h4 data-lang="settings_backup">Daily Backup</h4>
+                                                <p data-lang="settings_backup_desc">Create daily backup of your farm data</p>
+                                            </div>
+                                        </div>
+                                        <input type="checkbox" class="toggle-input" id="dailyBackup" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+
+                                    <label class="toggle-item">
+                                        <div class="toggle-info">
+                                            <i class="fa-solid fa-share-nodes toggle-icon success"></i>
+                                            <div>
+                                                <h4 data-lang="settings_analytics">Usage Analytics</h4>
+                                                <p data-lang="settings_analytics_desc">Help improve the app by sharing anonymous usage data</p>
+                                            </div>
+                                        </div>
+                                        <input type="checkbox" class="toggle-input" id="usageAnalytics">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Farmer Details Panel -->
+                    <div class="settings-panel" id="farmer-details-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title" data-lang="settings_farmer_details">Farmer Details</h2>
+                            </div>
+                            <div class="card-body">
+                                <form id="farmerDetailsForm">
+                                    <div class="settings-section">
+                                        <h3 class="settings-section-title" data-lang="settings_personal">Personal Information</h3>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="farmerFirstName" data-lang="first_name">First Name</label>
+                                                <input type="text" class="input" id="farmerFirstName" placeholder="John">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="farmerLastName" data-lang="last_name">Last Name</label>
+                                                <input type="text" class="input" id="farmerLastName" placeholder="Doe">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="farmerPhone" data-lang="phone">Phone Number</label>
+                                                <input type="tel" class="input" id="farmerPhone" placeholder="+91 98765 43210">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="farmerEmail" data-lang="email">Email</label>
+                                                <input type="email" class="input" id="farmerEmail" placeholder="farmer@example.com">
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label" for="farmerAadhar" data-lang="aadhar">Aadhar Number</label>
+                                            <input type="text" class="input" id="farmerAadhar" placeholder="XXXX XXXX XXXX" maxlength="14">
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <div class="settings-section">
+                                        <h3 class="settings-section-title" data-lang="settings_farming_exp">Farming Experience</h3>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="farmingYears" data-lang="years_farming">Years of Farming</label>
+                                                <input type="number" class="input" id="farmingYears" min="0" max="100" placeholder="e.g., 15">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="farmingType" data-lang="farming_type">Farming Type</label>
+                                                <select class="select" id="farmingType">
+                                                    <option value="" data-lang="select_farming_type">Select Type</option>
+                                                    <option value="traditional">Traditional</option>
+                                                    <option value="organic">Organic</option>
+                                                    <option value="modern">Modern / Precision</option>
+                                                    <option value="mixed">Mixed</option>
+                                                    <option value="hydroponic">Hydroponic</option>
+                                                    <option value="greenhouse">Greenhouse</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label" for="primaryCrops" data-lang="primary_crops">Primary Crops Grown</label>
+                                            <input type="text" class="input" id="primaryCrops" placeholder="e.g., Groundnut, Cotton, Wheat">
+                                            <small class="field-hint" data-lang="settings_crops_hint">Separate with commas</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <div class="settings-section">
+                                        <h3 class="settings-section-title" data-lang="settings_bank">Bank & Government Details</h3>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="bankName" data-lang="bank_name">Bank Name</label>
+                                                <input type="text" class="input" id="bankName" placeholder="e.g., State Bank of India">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="accountNumber" data-lang="account_number">Account Number</label>
+                                                <input type="text" class="input" id="accountNumber" placeholder="XXXXXXXXXXXX">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="ifscCode" data-lang="ifsc_code">IFSC Code</label>
+                                                <input type="text" class="input" id="ifscCode" placeholder="SBIN0001234" maxlength="11" style="text-transform: uppercase;">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="kisanCreditCard" data-lang="kcc_number">KCC Number</label>
+                                                <input type="text" class="input" id="kisanCreditCard" placeholder="Kisan Credit Card Number">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="pmKisanId" data-lang="pm_kisan_id">PM-KISAN ID</label>
+                                                <input type="text" class="input" id="pmKisanId" placeholder="PM-KISAN Beneficiary ID">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="landRecord" data-lang="land_record">Land Record Number</label>
+                                                <input type="text" class="input" id="landRecord" placeholder="Survey / Khasra Number">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="divider"></div>
+
+                                    <div class="settings-section">
+                                        <h3 class="settings-section-title" data-lang="settings_emergency">Emergency Contact</h3>
+
+                                        <div class="form-row">
+                                            <div class="field">
+                                                <label class="label" for="emergencyName" data-lang="emergency_name">Contact Name</label>
+                                                <input type="text" class="input" id="emergencyName" placeholder="Emergency contact name">
+                                            </div>
+                                            <div class="field">
+                                                <label class="label" for="emergencyPhone" data-lang="emergency_phone">Phone Number</label>
+                                                <input type="tel" class="input" id="emergencyPhone" placeholder="+91 98765 43210">
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label" for="emergencyRelation" data-lang="relation">Relationship</label>
+                                            <input type="text" class="input" id="emergencyRelation" placeholder="e.g., Spouse, Father, Neighbor">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa-solid fa-save"></i>
+                                            <span data-lang="save_changes">Save Changes</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline" id="resetFarmerBtn" data-lang="reset">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                    <a href="settings.html" class="footer-link" data-lang="settings">Settings</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2026 GREENgrid - Smart Agriculture Assistant
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/voice-assistant.js"></script>
+</body>
+</html>

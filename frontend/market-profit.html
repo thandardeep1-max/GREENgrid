@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market & Profit - Smart Agriculture Assistant</title>
+    <meta name="description" content="Compare market prices and calculate profit for your crops">
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var t = localStorage.getItem('agrismart-theme') || localStorage.getItem('theme') || 'system';
+            var l = localStorage.getItem('language') || 'en';
+            var isDark = t === 'dark' || (t === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            root.setAttribute('data-theme', t);
+            root.classList.toggle('dark', isDark);
+            root.setAttribute('lang', l === 'hi' ? 'hi' : 'en');
+        })();
+    </script>
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span class="logo-text">GREEN<span>grid</span></span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-lang="nav_home">Home</span>
+                </a>
+                <a href="soil-testing.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-lang="nav_soil">Soil</span>
+                </a>
+                <a href="crop-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-lang="nav_calendar">Calendar</span>
+                </a>
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-lang="nav_weather">Weather</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-md">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" id="langToggle" aria-label="Select Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="currentLang">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option active" data-lang="en"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" data-lang="hi"><span>🇮🇳</span> हिंदी</div>
+                    </div>
+                </div>
+
+                <!-- Theme Selector - Modern Pill Toggle -->
+                <div class="theme-selector">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Switch to Dark Theme" role="switch" aria-checked="false">
+                        <div class="theme-toggle-thumb">
+                            <i class="fa-solid fa-sun sun-icon"></i>
+                            <i class="fa-solid fa-moon moon-icon"></i>
+                            <i class="fa-solid fa-desktop system-icon"></i>
+                        </div>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light"><i class="fa-solid fa-sun"></i> Light</div>
+                        <div class="theme-option" data-theme="dark"><i class="fa-solid fa-moon"></i> Dark</div>
+                        <div class="theme-option" data-theme="system"><i class="fa-solid fa-desktop"></i> System</div>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <a href="settings.html" class="settings-btn" aria-label="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> <span data-lang="nav_home">Home</span></a>
+        <a href="soil-testing.html" class="nav-link"><i class="fa-solid fa-flask"></i> <span data-lang="soil_testing">Soil Testing</span></a>
+        <a href="crop-recommendation.html" class="nav-link"><i class="fa-solid fa-seedling"></i> <span data-lang="crop_rec">Crop Recommendation</span></a>
+        <a href="crop-calendar.html" class="nav-link"><i class="fa-solid fa-calendar-days"></i> <span data-lang="crop_calendar">Crop Calendar</span></a>
+        <a href="weather.html" class="nav-link"><i class="fa-solid fa-cloud-sun"></i> <span data-lang="weather_alerts">Weather</span></a>
+        <a href="disease-detection.html" class="nav-link"><i class="fa-solid fa-bug"></i> <span data-lang="disease_detect">Disease Detection</span></a>
+        <a href="market-profit.html" class="nav-link active"><i class="fa-solid fa-indian-rupee-sign"></i> <span data-lang="market_profit">Market & Profit</span></a>
+        <a href="ai.html" class="nav-link"><i class="fa-solid fa-robot"></i> <span data-lang="nav_ai">AI Advisor</span></a>
+        <a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-lang="nav_settings">Settings</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="page-header-inner">
+                <div class="page-breadcrumb">
+                    <a href="index.html" data-lang="nav_home">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span data-lang="nav_market">Market & Profit</span>
+                </div>
+                <h1 class="page-title" data-lang="market_title">Market & Profit Analysis</h1>
+                <p class="page-subtitle" data-lang="market_subtitle">Compare prices and calculate your profit before selling</p>
+            </div>
+        </section>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Market Hero Section -->
+            <section class="market-hero" aria-labelledby="marketHeroTitle">
+                <div class="market-hero-bg"></div>
+                <div class="market-hero-content">
+                    <div class="market-hero-main">
+                        <div class="market-identity">
+                            <div class="crop-icon-lg" aria-hidden="true" id="heroCropIcon">🥜</div>
+                            <div>
+                                <h2 id="marketHeroTitle" class="crop-name" data-lang="crop_groundnut">Groundnut</h2>
+                                <div class="market-status">
+                                    <span class="chip chip-success" data-lang="price_trending_up">Price Trending Up +3.2%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="market-quick-stats">
+                            <div class="quick-stat">
+                                <span class="quick-stat-value" id="govtPrice">₹5,250</span>
+                                <span class="quick-stat-label" data-lang="govt_mandi_price">Govt Mandi Price / Quintal</span>
+                            </div>
+                            <div class="quick-stat-divider" aria-hidden="true"></div>
+                            <div class="quick-stat">
+                                <span class="quick-stat-value" id="potentialProfit">₹53,750</span>
+                                <span class="quick-stat-label" data-lang="potential_profit">Potential Profit (25 Qtl)</span>
+                            </div>
+                            <div class="quick-stat-divider" aria-hidden="true"></div>
+                            <div class="quick-stat">
+                                <span class="quick-stat-value" id="profitMargin">41%</span>
+                                <span class="quick-stat-label" data-lang="profit_margin">Profit Margin</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="market-actions">
+                        <button class="btn btn-outline" id="refreshPricesBtn">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            <span data-lang="refresh_prices">Refresh Prices</span>
+                        </button>
+                        <button class="btn btn-primary" id="viewAllMarketsBtn">
+                            <i class="fa-solid fa-list"></i>
+                            <span data-lang="view_all_markets">View All Markets</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Crop Selector Bar -->
+            <section class="crop-selector-bar" aria-labelledby="cropSelectorTitle">
+                <h3 id="cropSelectorTitle" class="section-title sr-only" data-lang="select_crop">Select Your Crop</h3>
+                <div class="crop-selector" id="cropSelector">
+                    <button class="crop-selector-btn active" data-crop="groundnut" data-icon="🥜">
+                        <span class="crop-icon">🥜</span>
+                        <span data-lang="crop_groundnut">Groundnut</span>
+                    </button>
+                    <button class="crop-selector-btn" data-crop="cotton" data-icon="🌾">
+                        <span class="crop-icon">🌾</span>
+                        <span data-lang="crop_cotton">Cotton</span>
+                    </button>
+                    <button class="crop-selector-btn" data-crop="maize" data-icon="🌽">
+                        <span class="crop-icon">🌽</span>
+                        <span data-lang="crop_maize">Maize</span>
+                    </button>
+                    <button class="crop-selector-btn" data-crop="wheat" data-icon="🌾">
+                        <span class="crop-icon">🌾</span>
+                        <span data-lang="crop_wheat">Wheat</span>
+                    </button>
+                </div>
+            </section>
+
+            <div class="two-column mt-2xl">
+                <!-- Left Column - Price Comparison -->
+                <div>
+                    <!-- Market Price Cards -->
+                    <section class="price-cards-section" aria-labelledby="marketPricesTitle">
+                        <h3 id="marketPricesTitle" class="section-title" data-lang="market_prices">Market Prices</h3>
+                        <div class="price-cards" id="priceCards">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section>
+
+                    <!-- Price Trend Chart -->
+                    <section class="price-trend-section" aria-labelledby="priceTrendTitle">
+                        <div class="section-header">
+                            <h3 id="priceTrendTitle" class="section-title" data-lang="price_trend">Price Trend (Last 7 Days)</h3>
+                            <div class="trend-indicator up" id="trendIndicator">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <span data-lang="trend_up">+3.2%</span>
+                            </div>
+                        </div>
+                        <div class="price-trend-chart" id="priceTrendChart" role="img" aria-label="Price trend chart for the last 7 days">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column - Profit Calculator & Recommendation -->
+                <div>
+                    <div class="market-sidebar">
+                        <!-- Profit Calculator -->
+                        <section class="profit-calculator-card" aria-labelledby="profitCalcTitle">
+                            <header class="card-header">
+                                <h3 id="profitCalcTitle" class="section-title" data-lang="profit_calculator">Profit Calculator</h3>
+                            </header>
+                            <form id="profitForm" class="profit-form">
+                                <!-- Yield Input -->
+                                <div class="field">
+                                    <label class="label" for="expectedYield" data-lang="expected_yield">Expected Yield (Quintals)</label>
+                                    <input type="number" class="input" id="expectedYield" value="25" min="0" step="0.5" aria-describedby="yieldHelp">
+                                    <span class="field-hint" id="yieldHelp" data-lang="yield_hint">Enter your expected harvest in quintals</span>
+                                </div>
+
+                                <!-- Selling Price -->
+                                <div class="field">
+                                    <label class="label" for="sellingPrice" data-lang="selling_price">Selling Price (₹/Quintal)</label>
+                                    <input type="number" class="input" id="sellingPrice" value="5250" min="0" aria-describedby="priceHelp">
+                                    <span class="field-hint" id="priceHelp" data-lang="price_hint">Auto-filled from best market price</span>
+                                </div>
+
+                                <div class="divider mt-lg mb-lg">
+                                    <span data-lang="costs">Costs</span>
+                                </div>
+
+                                <!-- Cultivation Cost -->
+                                <div class="field">
+                                    <label class="label" for="cultivationCost" data-lang="cultivation_cost">Cultivation Cost (₹)</label>
+                                    <input type="number" class="input" id="cultivationCost" value="75000" min="0" aria-describedby="cultivationHelp">
+                                    <span class="field-hint" id="cultivationHelp" data-lang="cultivation_hint">Seeds, fertilizer, labor, irrigation</span>
+                                </div>
+
+                                <!-- Transportation Cost -->
+                                <div class="field">
+                                    <label class="label" for="transportCost" data-lang="transport_cost">Transportation Cost (₹)</label>
+                                    <input type="number" class="input" id="transportCost" value="2500" min="0" aria-describedby="transportHelp">
+                                    <span class="field-hint" id="transportHelp" data-lang="transport_hint">Mandi transport, loading/unloading</span>
+                                </div>
+
+                                <!-- Other Costs -->
+                                <div class="field">
+                                    <label class="label" for="otherCosts" data-lang="other_costs">Other Costs (₹)</label>
+                                    <input type="number" class="input" id="otherCosts" value="0" min="0" aria-describedby="otherHelp">
+                                    <span class="field-hint" id="otherHelp" data-lang="other_hint">Storage, packaging, commissions</span>
+                                </div>
+
+                                <button type="button" class="btn btn-primary btn-block btn-lg mt-lg" onclick="calculateProfit()">
+                                    <i class="fa-solid fa-calculator"></i>
+                                    <span data-lang="calculate_profit">Calculate Profit</span>
+                                </button>
+                            </form>
+
+                            <!-- Results -->
+                            <div class="profit-result mt-xl" id="profitResult">
+                                <div class="profit-result-header">
+                                    <h4 data-lang="profit_summary">Profit Summary</h4>
+                                </div>
+
+                                <div class="profit-breakdown">
+                                    <div class="profit-row">
+                                        <span data-lang="total_revenue">Total Revenue</span>
+                                        <strong id="totalRevenue">₹1,31,250</strong>
+                                    </div>
+                                    <div class="profit-row">
+                                        <span data-lang="total_costs">Total Costs</span>
+                                        <strong id="totalCosts" class="text-error">- ₹77,500</strong>
+                                    </div>
+                                    <div class="profit-divider"></div>
+                                    <div class="profit-row net-profit">
+                                        <span data-lang="net_profit">Net Profit</span>
+                                        <strong id="netProfit" class="text-success">₹53,750</strong>
+                                    </div>
+                                </div>
+
+                                <div class="profit-margin">
+                                    <span data-lang="profit_margin">Profit Margin</span>
+                                    <span id="profitMarginValue" class="profit-margin-value text-success">41%</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Recommendation Card -->
+                        <section class="recommendation-card" aria-labelledby="recommendationTitle">
+                            <header class="card-header">
+                                <i class="fa-solid fa-lightbulb text-accent" aria-hidden="true"></i>
+                                <h3 id="recommendationTitle" class="section-title" data-lang="recommendation">Smart Recommendation</h3>
+                            </header>
+                            <div class="card expert-card">
+                                <div class="card-body">
+                                    <div class="expert-card-header">
+                                        <h4 class="font-semibold" data-lang="market_recommendation_title">Best Selling Strategy</h4>
+                                    </div>
+                                    <p class="text-sm text-secondary m-0" id="recommendationText">
+                                        Based on current prices, selling to <strong>Government Mandi</strong> offers the best return. The price trend is upward, so if you can store your produce safely, waiting a few more days could yield higher profits.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="recommendation-actions mt-lg">
+                                <button class="btn btn-primary btn-block" id="contactMandiBtn">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <span data-lang="contact_mandi">Contact Mandi</span>
+                                </button>
+                                <button class="btn btn-outline btn-block" id="setPriceAlertBtn">
+                                    <i class="fa-solid fa-bell"></i>
+                                    <span data-lang="set_price_alert">Set Price Alert</span>
+                                </button>
+                            </div>
+                        </section>
+
+                        <!-- Quick Insights -->
+                        <section class="insights-card" aria-labelledby="insightsTitle">
+                            <header class="card-header">
+                                <i class="fa-solid fa-chart-line text-accent" aria-hidden="true"></i>
+                                <h3 id="insightsTitle" class="section-title" data-lang="quick_insights">Quick Insights</h3>
+                            </header>
+                            <div class="insights-grid">
+                                <div class="insight-item">
+                                    <i class="fa-solid fa-arrow-up text-success" aria-hidden="true"></i>
+                                    <div>
+                                        <span class="insight-value" id="priceChange">+3.2%</span>
+                                        <span class="insight-label" data-lang="weekly_change">Weekly Change</span>
+                                    </div>
+                                </div>
+                                <div class="insight-item">
+                                    <i class="fa-solid fa-hand-holding-dollar text-primary" aria-hidden="true"></i>
+                                    <div>
+                                        <span class="insight-value" id="bestSpread">₹450</span>
+                                        <span class="insight-label" data-lang="price_spread">Price Spread</span>
+                                    </div>
+                                </div>
+                                <div class="insight-item">
+                                    <i class="fa-solid fa-calendar-check text-info" aria-hidden="true"></i>
+                                    <div>
+                                        <span class="insight-value" id="daysToSell">7 days</span>
+                                        <span class="insight-label" data-lang="optimal_sell_window">Optimal Sell Window</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Voice Assistant FAB -->
+    <button class="fab" id="voiceFab" onclick="toggleVoiceAssistant()" aria-label="Voice Assistant">
+        <i class="fa-solid fa-microphone"></i>
+        <span class="fab-tooltip" data-lang="voice_tooltip">Ask Agriculture Assistant</span>
+    </button>
+
+    <!-- Voice Assistant Overlay -->
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-close" onclick="toggleVoiceAssistant()" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="voice-container">
+            <div class="voice-icon" id="voiceIcon">
+                <i class="fa-solid fa-microphone"></i>
+            </div>
+            <p class="voice-text" id="voiceText" data-lang="voice_listening">Listening...</p>
+            <p class="voice-transcript" id="voiceTranscript"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span>GREEN<span>grid</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="soil-testing.html" class="footer-link" data-lang="soil_testing">Soil Testing</a>
+                    <a href="crop-recommendation.html" class="footer-link" data-lang="crop_rec">Crop Recommendation</a>
+                    <a href="crop-calendar.html" class="footer-link" data-lang="crop_calendar">Crop Calendar</a>
+                    <a href="weather.html" class="footer-link" data-lang="weather_alerts">Weather</a>
+                    <a href="disease-detection.html" class="footer-link" data-lang="disease_detect">Disease Detection</a>
+                    <a href="market-profit.html" class="footer-link" data-lang="market_profit">Market & Profit</a>
+                    <a href="ai.html" class="footer-link" data-lang="nav_ai">AI Advisor</a>
+                </div>
+                <div class="footer-copyright">© 2026 GREENgrid - Smart Agriculture Assistant</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/i18n-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/market-calculator.js"></script>
+    <script src="js/voice-assistant.js"></script>
+</body>
+</html>
