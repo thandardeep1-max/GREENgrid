@@ -230,6 +230,298 @@ analyzeBtn.addEventListener("click", async function () {
 
 });
 
+// ============================================================
+// Disease Information Database
+// ============================================================
+
+const diseaseInfo = {
+
+    "Powdery mildew": {
+        description:
+            "Powdery mildew is a fungal disease that appears as white or gray powder-like growth on plant leaves and other surfaces. Severe infections can reduce photosynthesis and plant growth.",
+
+        symptoms: [
+            "White or gray powdery patches on leaves",
+            "Yellowing or browning of affected leaves",
+            "Leaves may curl or become distorted",
+            "Reduced plant growth and vigor"
+        ],
+
+        causes: [
+            "Fungal infection",
+            "Warm days with humid conditions",
+            "Poor air circulation",
+            "Dense plant growth"
+        ],
+
+        treatment: [
+            "Remove severely infected leaves",
+            "Improve air circulation around the plants",
+            "Apply an appropriate fungicide according to its label",
+            "Avoid excessive nitrogen fertilization"
+        ],
+
+        prevention: [
+            "Maintain proper spacing between plants",
+            "Provide good air circulation",
+            "Avoid excessive irrigation",
+            "Remove infected plant material promptly"
+        ]
+    },
+
+
+    "Early blight": {
+        description:
+            "Early blight is a fungal disease that commonly affects leaves and stems. It produces dark spots with concentric rings and can reduce photosynthesis and crop yield.",
+
+        symptoms: [
+            "Dark circular spots on older leaves",
+            "Concentric ring patterns within lesions",
+            "Yellowing around infected areas",
+            "Premature leaf drop"
+        ],
+
+        causes: [
+            "Fungal infection",
+            "Warm and humid conditions",
+            "Wet foliage",
+            "Infected crop debris"
+        ],
+
+        treatment: [
+            "Remove severely infected leaves",
+            "Apply an appropriate fungicide according to the label",
+            "Improve air circulation",
+            "Remove infected plant debris"
+        ],
+
+        prevention: [
+            "Practice crop rotation",
+            "Avoid overhead irrigation",
+            "Keep foliage dry when possible",
+            "Use healthy planting material"
+        ]
+    },
+
+
+    "Late blight": {
+        description:
+            "Late blight is a serious disease caused by a fungus-like pathogen. It can rapidly damage leaves, stems and fruits under cool and wet conditions.",
+
+        symptoms: [
+            "Dark water-soaked lesions on leaves",
+            "Rapid browning of infected tissue",
+            "White growth may appear under leaves",
+            "Fruit may develop dark, firm lesions"
+        ],
+
+        causes: [
+            "Phytophthora infection",
+            "Cool and wet weather",
+            "High humidity",
+            "Extended leaf wetness"
+        ],
+
+        treatment: [
+            "Remove severely infected plant material",
+            "Apply an appropriate fungicide according to the label",
+            "Improve field ventilation",
+            "Avoid working with wet plants"
+        ],
+
+        prevention: [
+            "Use disease-resistant varieties where available",
+            "Avoid overhead irrigation",
+            "Maintain proper plant spacing",
+            "Remove infected crop debris"
+        ]
+    },
+
+
+    "Bacterial spot": {
+        description:
+            "Bacterial spot is a bacterial disease that causes small dark lesions on leaves, stems and fruits. Severe infections can reduce plant growth and crop quality.",
+
+        symptoms: [
+            "Small dark spots on leaves",
+            "Yellow halos around lesions",
+            "Spots on fruits",
+            "Leaf yellowing and drop"
+        ],
+
+        causes: [
+            "Bacterial infection",
+            "Warm and humid weather",
+            "Rain splash",
+            "Contaminated plant material"
+        ],
+
+        treatment: [
+            "Remove heavily infected plant material",
+            "Avoid working with plants when foliage is wet",
+            "Use an appropriate bactericide according to the label",
+            "Improve field sanitation"
+        ],
+
+        prevention: [
+            "Use certified healthy seeds",
+            "Avoid overhead irrigation",
+            "Practice crop rotation",
+            "Remove infected plant debris"
+        ]
+    }
+
+};
+
+// ============================================================
+// Update Disease Information
+// ============================================================
+
+function updateDiseaseInformation(disease) {
+
+    const info = diseaseInfo[disease];
+
+    // If disease is not in our database
+    if (!info) {
+
+        console.warn(
+            "No information available for:",
+            disease
+        );
+
+        return;
+    }
+
+
+    // About Disease
+    const description =
+        document.querySelector(
+            ".disease-section-content"
+        );
+
+    if (description) {
+        description.textContent =
+            info.description;
+    }
+
+
+    // Symptoms
+    const sections =
+        document.querySelectorAll(
+            ".disease-section"
+        );
+
+    // Symptoms section
+    const symptomsList =
+        sections[1]?.querySelector(
+            ".disease-list"
+        );
+
+    if (symptomsList) {
+
+        symptomsList.innerHTML = "";
+
+        info.symptoms.forEach(symptom => {
+
+            const li =
+                document.createElement("li");
+
+            li.textContent = symptom;
+
+            symptomsList.appendChild(li);
+        });
+    }
+
+
+    // Causes section
+    const causesList =
+        sections[2]?.querySelector(
+            ".disease-list"
+        );
+
+    if (causesList) {
+
+        causesList.innerHTML = "";
+
+        info.causes.forEach(cause => {
+
+            const li =
+                document.createElement("li");
+
+            li.textContent = cause;
+
+            causesList.appendChild(li);
+        });
+    }
+
+
+    // Treatment
+    const treatmentContainer =
+        document.querySelector(
+            ".treatment-steps"
+        );
+
+    if (treatmentContainer) {
+
+        treatmentContainer.innerHTML = "";
+
+        info.treatment.forEach(
+            (step, index) => {
+
+                const div =
+                    document.createElement("div");
+
+                div.className =
+                    "treatment-step";
+
+                div.innerHTML = `
+                    <div class="treatment-step-number">
+                        ${index + 1}
+                    </div>
+
+                    <div class="treatment-step-content">
+                        <strong>
+                            Step ${index + 1}
+                        </strong>
+
+                        <p>
+                            ${step}
+                        </p>
+                    </div>
+                `;
+
+                treatmentContainer.appendChild(div);
+            }
+        );
+    }
+
+
+    // Prevention
+    const preventionList =
+        document.querySelector(
+            ".prevention-list"
+        );
+
+    if (preventionList) {
+
+        preventionList.innerHTML = "";
+
+        info.prevention.forEach(
+            tip => {
+
+                const li =
+                    document.createElement("li");
+
+                li.innerHTML = `
+                    <i class="fa-solid fa-check"></i>
+                    <span>${tip}</span>
+                `;
+
+                preventionList.appendChild(li);
+            }
+        );
+    }
+}
 
 // ============================================================
 // Display Disease Result
@@ -255,6 +547,11 @@ function displayDiseaseResult(data) {
     const crop = prediction.crop || "Unknown Crop";
 
     const disease = prediction.disease || "Unknown Disease";
+
+    const formattedDisease =
+    formatDiseaseName(disease);
+
+updateDiseaseInformation(formattedDisease);
 
     const confidence = Number(
         prediction.confidence || 0
