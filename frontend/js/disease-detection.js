@@ -1,271 +1,460 @@
-/**
- * Smart Agriculture Assistant
- * Disease Detection - Image Upload & Processing
- */
+// ============================================================
+// GREENgrid - Plant Disease Detection
+// FastAPI + MobileNetV2
+// ============================================================
 
-// ============================================
-// State
-// ============================================
+const API_URL = "http://127.0.0.1:8000/predict";
 
-let uploadedImage = null;
-let isProcessing = false;
+// Elements
+const fileInput = document.getElementById("fileInput");
+const uploadZone = document.getElementById("uploadZone");
 
-// ============================================
-// Initialize
-// ============================================
+const imagePreview = document.getElementById("imagePreview");
+const previewImage = document.getElementById("previewImage");
 
-function initDiseaseDetection() {
-    setupFileUpload();
-    setupDragDrop();
-    setupCameraCapture();
-}
+const removeImage = document.getElementById("removeImage");
+const analyzeBtn = document.getElementById("analyzeBtn");
 
-// ============================================
-// File Upload Setup
-// ============================================
+const processingSection = document.getElementById("processingSection");
+const progressBar = document.getElementById("progressBar");
 
-function setupFileUpload() {
-    const fileInput = document.getElementById('fileInput');
-    if (fileInput) {
-        fileInput.addEventListener('change', handleFileSelect);
-    }
+const resultsSection = document.getElementById("resultsSection");
+const resultImage = document.getElementById("resultImage");
 
-    const removeBtn = document.getElementById('removeImage');
-    if (removeBtn) {
-        removeBtn.addEventListener('click', removeImage);
-    }
+const newScanBtn = document.getElementById("newScanBtn");
 
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    if (analyzeBtn) {
-        analyzeBtn.addEventListener('click', analyzeImage);
-    }
 
-    const newScanBtn = document.getElementById('newScanBtn');
-    if (newScanBtn) {
-        newScanBtn.addEventListener('click', resetScan);
-    }
-}
+// ============================================================
+// Store selected image
+// ============================================================
 
-// ============================================
-// Drag and Drop
-// ============================================
+let selectedFile = null;
 
-function setupDragDrop() {
-    const uploadZone = document.getElementById('uploadZone');
-    if (!uploadZone) return;
 
-    uploadZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadZone.classList.add('dragover');
-    });
+// ============================================================
+// File Selection
+// ============================================================
 
-    uploadZone.addEventListener('dragleave', () => {
-        uploadZone.classList.remove('dragover');
-    });
+fileInput.addEventListener("change", function () {
 
-    uploadZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadZone.classList.remove('dragover');
+    const file = this.files[0];
 
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            handleFile(files[0]);
-        }
-    });
-
-    uploadZone.addEventListener('click', () => {
-        const fileInput = document.getElementById('fileInput');
-        if (fileInput) fileInput.click();
-    });
-}
-
-// ============================================
-// Camera Capture
-// ============================================
-
-function setupCameraCapture() {
-    const cameraBtn = document.getElementById('cameraBtn');
-    if (cameraBtn) {
-        cameraBtn.addEventListener('click', () => {
-            // Create a file input that opens camera on mobile
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.capture = 'environment';
-            input.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    handleFile(e.target.files[0]);
-                }
-            });
-            input.click();
-        });
-    }
-}
-
-// ============================================
-// Handle File Selection
-// ============================================
-
-function handleFileSelect(e) {
-    const file = e.target.files[0];
-    if (file) {
-        handleFile(file);
-    }
-}
-
-// ============================================
-// Handle File
-// ============================================
-
-function handleFile(file) {
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-        window.showToast('Please select an image file', 'error');
+    if (!file) {
         return;
     }
 
-    // Validate file size (max 5MB)
+    handleImage(file);
+});
+
+
+// ============================================================
+// Handle Image
+// ============================================================
+
+function handleImage(file) {
+
+    // Check image
+    if (!file.type.startsWith("image/")) {
+
+        alert("Please select a valid image.");
+
+        return;
+    }
+
+    // 5 MB limit
     if (file.size > 5 * 1024 * 1024) {
-        window.showToast('Image size should be less than 5MB', 'error');
+
+        alert("Image size must be less than 5 MB.");
+
         return;
     }
 
-    uploadedImage = file;
+    selectedFile = file;
+
+    // Create preview
+    const imageURL = URL.createObjectURL(file);
+
+    previewImage.src = imageURL;
 
     // Show preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const previewImage = document.getElementById('previewImage');
-        if (previewImage) {
-            previewImage.src = e.target.result;
+    uploadZone.classList.add("hidden");
+    imagePreview.classList.remove("hidden");
+
+    // Hide old results
+    resultsSection.classList.add("hidden");
+}
+
+
+// ============================================================
+// Remove Image
+// ============================================================
+
+removeImage.addEventListener("click", function () {
+
+    selectedFile = null;
+
+    fileInput.value = "";
+
+    previewImage.src = "";
+
+    imagePreview.classList.add("hidden");
+
+    uploadZone.classList.remove("hidden");
+
+    processingSection.classList.add("hidden");
+
+    resultsSection.classList.add("hidden");
+});
+
+
+// ============================================================
+// Analyze Disease
+// ============================================================
+
+analyzeBtn.addEventListener("click", async function () {
+
+    if (!selectedFile) {
+
+        alert("Please select an image first.");
+
+        return;
+    }
+
+    // Hide upload section
+    imagePreview.classList.add("hidden");
+
+    // Show processing
+    processingSection.classList.remove("hidden");
+
+    // Reset progress
+    progressBar.style.width = "0%";
+
+    // Fake progress animation
+    let progress = 0;
+
+    const progressInterval = setInterval(() => {
+
+        if (progress < 90) {
+
+            progress += 10;
+
+            progressBar.style.width = progress + "%";
         }
 
-        document.getElementById('uploadZone').classList.add('hidden');
-        document.getElementById('imagePreview').classList.remove('hidden');
-    };
-    reader.readAsDataURL(file);
-}
+    }, 150);
 
-// ============================================
-// Remove Image
-// ============================================
-
-function removeImage() {
-    uploadedImage = null;
-    const fileInput = document.getElementById('fileInput');
-    if (fileInput) fileInput.value = '';
-
-    document.getElementById('uploadZone').classList.remove('hidden');
-    document.getElementById('imagePreview').classList.add('hidden');
-}
-
-// ============================================
-// Analyze Image
-// ============================================
-
-async function analyzeImage() {
-    if (!uploadedImage || isProcessing) return;
-
-    isProcessing = true;
-
-    // Show processing section
-    document.getElementById('imagePreview').classList.add('hidden');
-    document.getElementById('processingSection').classList.remove('hidden');
-
-    // Animate progress bar
-    const progressBar = document.getElementById('progressBar');
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress > 90) progress = 90;
-        if (progressBar) progressBar.style.width = `${progress}%`;
-    }, 200);
 
     try {
-        // In production: send to backend API for ML processing
-        // const formData = new FormData();
-        // formData.append('image', uploadedImage);
-        // const response = await fetch('/api/disease-detect', { method: 'POST', body: formData });
-        // const result = await response.json();
 
-        // Simulate processing delay
-        await new Promise(resolve => setTimeout(resolve, 2500));
+        // ====================================================
+        // Create FormData
+        // ====================================================
+
+        const formData = new FormData();
+
+        formData.append("file", selectedFile);
+
+
+        // ====================================================
+        // Send image to FastAPI
+        // ====================================================
+
+        const response = await fetch(API_URL, {
+
+            method: "POST",
+
+            body: formData
+
+        });
+
+
+        // ====================================================
+        // Check API response
+        // ====================================================
+
+        if (!response.ok) {
+
+            const errorData = await response.json().catch(() => ({}));
+
+            throw new Error(
+                errorData.detail || "Disease detection failed."
+            );
+        }
+
+
+        // ====================================================
+        // Read JSON
+        // ====================================================
+
+        const data = await response.json();
+
+        console.log("API Response:", data);
+
+
+        // ====================================================
+        // Complete progress
+        // ====================================================
 
         clearInterval(progressInterval);
-        if (progressBar) progressBar.style.width = '100%';
 
-        // Show results
-        setTimeout(() => {
-            showResults();
-        }, 500);
+        progressBar.style.width = "100%";
+
+
+        // Small delay so animation completes
+        await new Promise(resolve => setTimeout(resolve, 400));
+
+
+        // ====================================================
+        // Display Result
+        // ====================================================
+
+        displayDiseaseResult(data);
+
 
     } catch (error) {
-        console.error('Analysis error:', error);
-        window.showToast('Error analyzing image. Please try again.', 'error');
-        resetScan();
-    } finally {
-        isProcessing = false;
+
+        clearInterval(progressInterval);
+
+        console.error("Disease Detection Error:", error);
+
+        alert(
+            "Unable to detect disease.\n\n" +
+            error.message
+        );
+
+        // Restore preview
+        processingSection.classList.add("hidden");
+
+        imagePreview.classList.remove("hidden");
+    }
+
+});
+
+
+// ============================================================
+// Display Disease Result
+// ============================================================
+
+function displayDiseaseResult(data) {
+
+    console.log("Disease result:", data);
+
+    // Hide processing
+    processingSection.classList.add("hidden");
+
+    // Show results
+    resultsSection.classList.remove("hidden");
+
+
+    // ========================================================
+    // Extract API data
+    // ========================================================
+
+    const prediction = data.prediction;
+
+    const crop = prediction.crop || "Unknown Crop";
+
+    const disease = prediction.disease || "Unknown Disease";
+
+    const confidence = Number(
+        prediction.confidence || 0
+    );
+
+
+    // ========================================================
+    // Show uploaded image
+    // ========================================================
+
+    resultImage.src = previewImage.src;
+
+
+    // ========================================================
+    // Disease name
+    // ========================================================
+
+    const diseaseName =
+        document.querySelector(".disease-name");
+
+    diseaseName.textContent =
+        formatDiseaseName(disease);
+
+
+    // ========================================================
+    // Crop + scientific name
+    // ========================================================
+
+    const scientificName =
+        document.querySelector(".disease-scientific");
+
+    scientificName.textContent =
+        "Detected crop: " + formatCropName(crop);
+
+
+    // ========================================================
+    // Confidence
+    // ========================================================
+
+    const confidenceValue =
+        document.querySelector(
+            ".disease-confidence strong"
+        );
+
+    confidenceValue.textContent =
+        confidence.toFixed(2) + "%";
+
+
+    // ========================================================
+    // Severity
+    // ========================================================
+
+    updateSeverity(confidence, disease);
+
+
+    // Scroll to results
+    resultsSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+// ============================================================
+// Format Disease Name
+// ============================================================
+
+function formatDiseaseName(disease) {
+
+    if (!disease) {
+        return "Unknown Disease";
+    }
+
+    // Remove crop prefix
+    if (disease.includes("___")) {
+
+        disease = disease.split("___")[1];
+    }
+
+    // Replace underscores
+    disease = disease.replaceAll("_", " ");
+
+    // Remove extra spaces
+    disease = disease.replace(/\s+/g, " ");
+
+    return disease.trim();
+}
+
+
+// ============================================================
+// Format Crop Name
+// ============================================================
+
+function formatCropName(crop) {
+
+    if (!crop) {
+        return "Unknown Crop";
+    }
+
+    crop = crop.replaceAll("_", " ");
+
+    return crop.trim();
+}
+
+
+// ============================================================
+// Severity
+// ============================================================
+
+function updateSeverity(confidence, disease) {
+
+    const badge =
+        document.querySelector(".disease-badge");
+
+    const icon =
+        badge.querySelector("i");
+
+    const text =
+        badge.querySelector("span");
+
+
+    // Healthy plant
+    if (
+        disease.toLowerCase().includes("healthy")
+    ) {
+
+        badge.className =
+            "disease-badge severity-low";
+
+        icon.className =
+            "fa-solid fa-circle-check";
+
+        text.textContent =
+            "Healthy Plant";
+
+        return;
+    }
+
+
+    // Disease severity
+    if (confidence >= 90) {
+
+        badge.className =
+            "disease-badge severity-high";
+
+        icon.className =
+            "fa-solid fa-triangle-exclamation";
+
+        text.textContent =
+            "High Confidence";
+
+    } else if (confidence >= 70) {
+
+        badge.className =
+            "disease-badge severity-medium";
+
+        icon.className =
+            "fa-solid fa-circle-exclamation";
+
+        text.textContent =
+            "Medium Confidence";
+
+    } else {
+
+        badge.className =
+            "disease-badge severity-low";
+
+        icon.className =
+            "fa-solid fa-circle-question";
+
+        text.textContent =
+            "Low Confidence";
     }
 }
 
-// ============================================
-// Show Results
-// ============================================
 
-function showResults() {
-    // Set result image
-    const resultImage = document.getElementById('resultImage');
-    if (resultImage && uploadedImage) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            resultImage.src = e.target.result;
-        };
-        reader.readAsDataURL(uploadedImage);
-    }
+// ============================================================
+// New Scan
+// ============================================================
 
-    // Hide processing, show results
-    document.getElementById('processingSection').classList.add('hidden');
-    document.getElementById('resultsSection').classList.remove('hidden');
-}
+newScanBtn.addEventListener("click", function () {
 
-// ============================================
-// Reset Scan
-// ============================================
+    selectedFile = null;
 
-function resetScan() {
-    uploadedImage = null;
-    isProcessing = false;
+    fileInput.value = "";
 
-    // Reset progress bar
-    const progressBar = document.getElementById('progressBar');
-    if (progressBar) progressBar.style.width = '0%';
+    previewImage.src = "";
 
-    // Show upload section
-    document.getElementById('resultsSection').classList.add('hidden');
-    document.getElementById('processingSection').classList.add('hidden');
-    document.getElementById('imagePreview').classList.add('hidden');
-    document.getElementById('uploadZone').classList.remove('hidden');
-}
+    resultImage.src = "";
 
-// ============================================
-// Download Report
-// ============================================
+    resultsSection.classList.add("hidden");
 
-function downloadDiseaseReport() {
-    window.showToast('Report downloaded successfully!', 'success');
-}
+    processingSection.classList.add("hidden");
 
-// ============================================
-// Initialize
-// ============================================
+    imagePreview.classList.add("hidden");
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('uploadZone')) {
-        initDiseaseDetection();
-    }
+    uploadZone.classList.remove("hidden");
 
-    const downloadBtn = document.getElementById('downloadReport');
-    if (downloadBtn) {
-        downloadBtn.addEventListener('click', downloadDiseaseReport);
-    }
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 });
