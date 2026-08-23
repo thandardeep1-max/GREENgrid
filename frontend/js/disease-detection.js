@@ -2,7 +2,7 @@
 // GREENgrid - Plant Disease Detection
 // FastAPI + MobileNetV2
 // ============================================================
-
+console.log("🔥 NEW GREENgrid disease-detection.js LOADED");
 const API_URL = "http://127.0.0.1:8000/predict";
 
 // Elements
